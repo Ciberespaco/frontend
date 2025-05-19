@@ -5,7 +5,7 @@ export const containerClass = 'w-full h-full p-4 lg:p-0'
 </script>
 
 <script setup lang="ts">
-import { useForm, useField } from 'vee-validate'
+import { Form, useForm, useField } from 'vee-validate'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRouter } from '#app'
@@ -29,7 +29,6 @@ const formSchema = toTypedSchema(z.object({
 const form = useForm({
     validationSchema: formSchema,
     validateOnMount: false,
-
 })
 
 const { value: email, errorMessage: emailError } = useField<string>('email')
@@ -44,7 +43,7 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
-    <div class="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div class="w-full lg:grid lg:grid-cols-2 xl:min-h-[800px]">
         <div class="flex items-center justify-center py-12">
             <form class="mx-auto grid w-[350px] gap-6" @submit="onSubmit">
                 <AlertError v-if="apiError" type="error" :message="apiError" class="mb-4" />
