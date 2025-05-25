@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Login from '@/components/login/Login.vue';
+import Register from '@/components/login/Register.vue';
 definePageMeta({ layout: 'auth' })
 </script>
 
 <template>
-  <Login />
+    <Register />
 </template>

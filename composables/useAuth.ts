@@ -1,11 +1,9 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
-import { useRuntimeConfig } from "#app";
 import { formatError } from "~/lib/utils";
 
 export function useAuth() {
   const auth = useAuthStore();
-  const config = useRuntimeConfig();
 
   const login = async (email: string, password: string) => {
     auth.loading = true;
