@@ -1,6 +1,9 @@
-// @ts-check
-import withNuxt from './.nuxt/eslint.config.mjs'
+import withNuxt from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt(
-  // Your custom configs here
-)
+  { ignores: ["components/ui/**"] },
+  {
+    files: ["**/*.ts", "**/*.vue"],
+    rules: { "no-console": "error", "vue/html-self-closing": "off" }
+  }
+);

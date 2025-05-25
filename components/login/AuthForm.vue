@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
-import AlertError from '../alertError/AlertError.vue';
+import { Button } from "@/components/ui/button";
+import AlertError from "../alertError/AlertError.vue";
 
 defineProps<{
-  title: string
-  subtitle: string
-  submitLabel: string
-  loading: boolean
-  apiError: string | null
-  secondaryHref: string
-  secondaryLabel: string
-  onSubmit: (e?: Event) => unknown
-}>()
+  title: string;
+  subtitle: string;
+  submitLabel: string;
+  loading: boolean;
+  apiError: string | null;
+  secondaryHref: string;
+  secondaryLabel: string;
+  onSubmit: (e?: Event) => unknown;
+}>();
 </script>
 
 <template>
@@ -26,11 +26,11 @@ defineProps<{
     <slot />
 
     <Button type="submit" class="w-full" :disabled="loading">
-      {{ loading ? submitLabel + '…' : submitLabel }}
+      {{ loading ? submitLabel + "…" : submitLabel }}
     </Button>
 
     <p class="mt-4 text-center text-sm">
-      {{ title === 'Login' ? 'Não tem uma conta?' : 'Já tem uma conta?' }}
+      {{ title === "Login" ? "Não tem uma conta?" : "Já tem uma conta?" }}
       <a :href="secondaryHref" class="underline">{{ secondaryLabel }}</a>
     </p>
   </form>

@@ -6,14 +6,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/tailwind.css"],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss()]
   },
   ssr: false,
 
   runtimeConfig: {
     public: {
-      backendURL: process.env.BACKEND_URL,
-    },
+      backendURL: process.env.BACKEND_URL
+    }
   },
 
   modules: [
@@ -23,6 +23,12 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "shadcn-nuxt",
     "@pinia/nuxt",
-    "@nuxtjs/google-fonts",
+    "@nuxtjs/google-fonts"
   ],
+
+  eslint: {
+    config: {
+      stylistic: true
+    }
+  }
 });

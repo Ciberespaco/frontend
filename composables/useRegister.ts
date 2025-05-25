@@ -13,9 +13,9 @@ export function useRegister() {
       await axios.post("/user", {
         email,
         password,
-        name,
+        name
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       loading.value = false;
       apiError.value = formatError(err);
     } finally {
@@ -26,6 +26,6 @@ export function useRegister() {
   return {
     register,
     apiError,
-    loading,
+    loading
   };
 }

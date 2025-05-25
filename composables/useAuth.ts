@@ -12,7 +12,7 @@ export function useAuth() {
     try {
       const { data } = await axios.post("/login", {
         email,
-        password,
+        password
       });
       auth.setToken(data.access_token);
 
@@ -20,7 +20,7 @@ export function useAuth() {
       auth.setUser(profileRes.data);
 
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
       auth.error = formatError(err);
       return false;
     } finally {
@@ -39,6 +39,6 @@ export function useAuth() {
     token: computed(() => auth.token),
     loading: computed(() => auth.loading),
     error: computed(() => auth.error),
-    isLoggedIn: computed(() => !!auth.token),
+    isLoggedIn: computed(() => !!auth.token)
   };
 }

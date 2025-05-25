@@ -1,4 +1,3 @@
-
 import { defineStore } from "pinia";
 import axios from "axios";
 
@@ -20,7 +19,7 @@ export const useAuthStore = defineStore("auth", {
     user: null,
     token: null,
     loading: false,
-    error: null,
+    error: null
   }),
 
   actions: {
@@ -47,16 +46,14 @@ export const useAuthStore = defineStore("auth", {
 
         if (token) {
           this.setToken(token);
-
           try {
             const { data } = await axios.get("/user/me");
             this.setUser(data);
-          } catch (err) {
-            console.error("Erro ao restaurar usuário:", err);
+          } catch {
             this.clearAuth();
           }
         }
       }
-    },
-  },
+    }
+  }
 });
