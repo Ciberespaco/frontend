@@ -1,28 +1,45 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-import type { AxiosError } from "axios";
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+import { isAxiosError } from 'axios'
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
+}
+
+interface ErrorResponse {
+  message?: string | string[]
+  detail?: string
+  error?: string
 }
 
 export function formatError(err: unknown): string {
-  const axiosErr = err as AxiosError<any>;
-  const resData = axiosErr?.response?.data;
+  if (isAxiosError(err)) {
+    const resData = err.response?.data as ErrorResponse | undefined
 
-  if (resData) {
-    if (resData.message) {
-      return Array.isArray(resData.message)
-        ? resData.message.join(", ")
-        : String(resData.message);
+    if (resData) {
+      if (resData.message) {
+        return Array.isArray(resData.message)
+          ? resData.message.join(', ')
+          : String(resData.message)
+      }
+      if (resData.detail) {
+        return String(resData.detail)
+      }
+      if (resData.error) {
+        return String(resData.error)
+      }
     }
-    if (resData.detail) return String(resData.detail);
-    if (resData.error) return String(resData.error);
+
+    return err.message
   }
 
-  if (typeof err === "string") return err;
+  if (typeof err === 'string') {
+    return err
+  }
 
-  if (err instanceof Error) return err.message;
+  if (err instanceof Error) {
+    return err.message
+  }
 
-  return "Ocorreu um erro inesperado.";
+  return 'Ocorreu um erro inesperado.'
 }

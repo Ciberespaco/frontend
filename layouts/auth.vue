@@ -5,8 +5,11 @@
     </div>
 
     <div class="hidden lg:block h-full">
-      <img src="/images/login/login-photo.jpg" alt="Imagem"
-        class="h-screen w-full object-cover dark:brightness-[0.2] dark:grayscale" />
+      <img
+        src="/images/login/login-photo.jpg"
+        alt="Imagem"
+        class="h-screen w-full object-cover dark:brightness-[0.2] dark:grayscale"
+      />
     </div>
   </div>
 </template>
