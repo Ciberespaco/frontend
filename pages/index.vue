@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { useAuth } from "@/composables/useAuth";
+import { useAuth } from '@/composables/useAuth'
 
-const { token, isLoggedIn, user, logout } = useAuth();
+const { token, isLoggedIn, user, logout } = useAuth()
 const handleLogout = () => {
-  logout();
-  useRouter().push("/login");
-};
+  logout()
+  useRouter().push('/login')
+}
 </script>
 
 <template>
   <div class="p-8 space-y-4">
     <div class="flex justify-between items-center">
-      <h1 class="text-3xl font-bold">Home Page</h1>
+      <h1 class="text-3xl font-bold">
+        Home Page
+      </h1>
       <button
         class="text-sm text-red-600 underline hover:text-red-800 transition"
         @click="handleLogout"
