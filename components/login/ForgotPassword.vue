@@ -13,21 +13,17 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-/* schema */
 const formSchema = toTypedSchema(
   z.object({
     email: z.string().email('Email inválido'),
   }),
 )
 
-/* form */
 const form = useForm({ validationSchema: formSchema })
 const { value: email, errorMessage: emailError } = useField<string>('email')
 
-/* auth composable */
 const { forgotPassword, error: apiError, loading } = useAuth()
 
-/* ação de envio */
 const onSubmit = form.handleSubmit((values) => {
   forgotPassword(values.email)
 })
