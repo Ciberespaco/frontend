@@ -31,4 +31,11 @@ export default defineNuxtConfig({
       stylistic: true,
     },
   },
+  googleFonts: {
+    families: {
+      'Montserrat': [400, 500, 600, 700], // pesos que desejar
+      'Open Sans': [400, 500, 600, 700],
+    },
+    display: 'swap',
+  },
 })

@@ -6,6 +6,7 @@ const handleLogout = () => {
   logout()
   useRouter().push('/login')
 }
+definePageMeta({ layout: 'logged' })
 </script>
 
 <template>
