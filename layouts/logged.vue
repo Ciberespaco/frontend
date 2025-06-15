@@ -46,7 +46,7 @@
             <SidebarSeparator class="mb-2" />
             <div
               class="flex items-center gap-3 rounded-md px-3 py-2 cursor-pointer hover:bg-muted transition hover:text-primary"
-              @click="$router.push('/perfil')"
+              @click="$router.push('/profile')"
             >
               <Avatar class="h-9 w-9">
                 <AvatarImage

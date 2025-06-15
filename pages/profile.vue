@@ -1,0 +1,76 @@
+<template>
+  <div class="flex flex-col h-screen px-8 py-16">
+    <Title>Usuário</Title>
+    <p class="text-lg text-zinc-600">
+      Esta é a página de perfil do usuário. Aqui você pode ver e editar suas
+      informações pessoais.
+    </p>
+    <div
+      v-if="!isEditing"
+      class="flex flex-col mt-8 p-6 bg-white rounded-lg shadow-md"
+    >
+      <span class="text-sm text-zinc-500 mt-2">
+        <b>ID:</b> {{ user?.id || "ID não disponível" }}
+      </span>
+      <span class="text-sm text-zinc-500 mt-2">
+        <b>Nome:</b> {{ user?.name || "Nome não disponível" }}
+      </span>
+      <span class="text-sm text-zinc-500 mt-2">
+        <b>Email:</b> {{ user?.email || "Email não disponível" }}
+      </span>
+      <div class="mt-4 flex gap-2 text-white">
+        <Button variant="secondary" @click="isEditing = true"> Editar </Button>
+        <Button variant="destructive" @click="handleDelete"> Excluir </Button>
+        <Button variant="default" @click="handleLogout"> Sair </Button>
+      </div>
+    </div>
+    <EditUserForm
+      v-if="isEditing"
+      :user="user"
+      @updated="onUserUpdated"
+      @cancel="isEditing = false"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import swal from "sweetalert2";
+import Title from "~/components/basic/Title.vue";
+import Button from "~/components/ui/button/Button.vue";
+import EditUserForm from "~/components/EditUserForm.vue";
+
+import { useAuth } from "@/composables/useAuth";
+
+definePageMeta({ layout: "logged" });
+const { user } = useAuth();
+const isEditing = ref(false);
+
+const handleLogout = () => {
+  const { logout } = useAuth();
+  logout();
+  useRouter().push("/login");
+};
+
+const onUserUpdated = (updatedUser: { name: string; email: string }) => {
+  user.value.name = updatedUser.name;
+  user.value.email = updatedUser.email;
+  isEditing.value = false;
+};
+
+const handleDelete = () => {
+  swal
+    .fire({
+      title: "Tem certeza?",
+      text: "Você não poderá reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar"
+    })
+    .then((result) => {
+      if (result.isConfirmed) {
+        
+      }
+    });
+};
+</script>
