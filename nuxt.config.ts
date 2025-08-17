@@ -15,9 +15,6 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],
-  app: {
-    baseURL: '/artes-sabores/',
-  },
 
   runtimeConfig: {
     public: {
