@@ -46,15 +46,8 @@
             <SidebarSeparator class="mb-2" />
             <div
               class="flex items-center gap-3 rounded-md px-3 py-2 cursor-pointer hover:bg-muted transition hover:text-primary"
-              @click="$router.push('/perfil')"
+              @click="$router.push('/profile')"
             >
-              <Avatar class="h-9 w-9">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="User avatar"
-                />
-                <AvatarFallback>AS</AvatarFallback>
-              </Avatar>
               <div class="flex flex-col">
                 <p class="text-sm font-medium leading-none">
                   {{ authStore.user?.name || "Usuário" }}
@@ -94,8 +87,6 @@ import {
   SidebarSeparator,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-
 import { useAuthStore } from '@/stores/useAuthStore'
 
 const navItems = [

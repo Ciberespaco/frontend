@@ -2,7 +2,6 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-
   modules: [
     '@nuxt/image',
     '@nuxt/icon',
@@ -33,7 +32,7 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     families: {
-      'Montserrat': [400, 500, 600, 700], // pesos que desejar
+      'Montserrat': [400, 500, 600, 700],
       'Open Sans': [400, 500, 600, 700],
     },
     display: 'swap',

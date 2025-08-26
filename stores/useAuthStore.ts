@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { formatError } from '~/lib/utils'
 
 interface User {
   id: string
@@ -38,6 +39,28 @@ export const useAuthStore = defineStore('auth', {
       this.token = null
       delete axios.defaults.headers.common['Authorization']
       localStorage.removeItem('auth_token')
+    },
+
+    async updateUser(payload: {
+      name: string
+      email: string
+      password?: string
+    }) {
+      if (!this.user) return
+
+      this.loading = true
+      this.error = null
+      try {
+        const { data } = await axios.put(`/user/${this.user.id}`, payload)
+        this.user = data
+      }
+      catch (err: unknown) {
+        this.error = formatError(err)
+        throw err
+      }
+      finally {
+        this.loading = false
+      }
     },
 
     async initialize() {
