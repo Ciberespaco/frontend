@@ -19,47 +19,73 @@
         <b>Email:</b> {{ user?.email || "Email não disponível" }}
       </span>
       <div class="mt-4 flex gap-2 text-white">
-        <Button variant="secondary" @click="isEditing = true"> Editar </Button>
-        <Button variant="destructive" @click="handleDelete"> Excluir </Button>
-        <Button variant="default" @click="handleLogout"> Sair </Button>
+        <Button
+          variant="secondary"
+          @click="isEditing = true"
+        >
+          Editar
+        </Button>
+        <Button
+          variant="destructive"
+          @click="handleDelete"
+        >
+          Excluir
+        </Button>
+        <Button
+          variant="default"
+          @click="handleLogout"
+        >
+          Sair
+        </Button>
       </div>
     </div>
-    <EditUserForm v-if="isEditing" :user="user" @cancel="isEditing = false" />
+    <EditUserForm
+      v-if="isEditing && user"
+      :user="user"
+      @cancel="isEditing = false"
+    />
+    <div
+      v-if="isEditing && user?.id"
+      class="mt-6"
+    >
+      <ChangePassword :user-id="user.id" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import swal from "sweetalert2";
-import Title from "~/components/basic/Title.vue";
-import Button from "~/components/ui/button/Button.vue";
-import EditUserForm from "~/components/EditUser/EditUserForm.vue";
+import swal from 'sweetalert2'
+import Title from '~/components/basic/Title.vue'
+import Button from '~/components/ui/button/Button.vue'
+import EditUserForm from '~/components/EditUser/EditUserForm.vue'
+import ChangePassword from '~/components/EditUser/ChangePassword.vue'
 
-import { useAuth } from "@/composables/useAuth";
-import { useDeleteUser } from "#imports";
+import { useAuth } from '@/composables/useAuth'
+import { useDeleteUser } from '#imports'
 
-const { user, logout } = useAuth();
-const isEditing = ref(false);
-const { deleteUser } = useDeleteUser();
+const { user, logout } = useAuth()
+const isEditing = ref(false)
+const { deleteUser } = useDeleteUser()
 
 const handleLogout = () => {
-  logout();
-  useRouter().push("/login");
-};
+  logout()
+  useRouter().push('/login')
+}
 
 const handleDelete = () => {
   swal
     .fire({
-      title: "Tem certeza?",
-      text: "Você não poderá reverter isso!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'Você não poderá reverter isso!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Sim, excluir!",
-      cancelButtonText: "Cancelar"
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar',
     })
     .then((result) => {
       if (result.isConfirmed) {
-        deleteUser();
+        deleteUser()
       }
-    });
-};
+    })
+}
 </script>

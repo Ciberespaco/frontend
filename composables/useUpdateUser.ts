@@ -6,11 +6,7 @@ export function useUpdateUser() {
   const store = useAuthStore()
   const apiError = ref<string | null>(null)
 
-  const updateUser = async (values: {
-    name: string
-    email: string
-    password?: string
-  }) => {
+  const updateUser = async (values: { name: string, email: string }) => {
     apiError.value = null
     try {
       await store.updateUser(values)
