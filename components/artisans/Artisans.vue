@@ -1,19 +1,17 @@
 <template>
   <!-- Header com Título -->
-  <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-3xl font-bold tracking-tight">Artesãos</h1>
-      <p class="text-muted-foreground mt-2">
-        Gerencie os artesãos cadastrados no sistema
+  <div class="flex flex-col h-screen px-8 py-16">
+    <span class="flex flex-col mb-8">
+      <Title>Artesãos</Title>
+      <p class="text-lg text-zinc-600">
+        Esta é a página de artesãos. Onde você pode ver todos os artesãos
+        cadastrados.
       </p>
-    </div>
-    <Button class="flex items-center gap-2">
-      <Plus class="h-4 w-4" />
-      Novo Artesão
-    </Button>
+    </span>
     <ArtisansList />
   </div>
 </template>
 <script setup lang="ts">
-import { ArtisansList } from "@/components/artisans/ArtisansList.vue";
+import Title from "../basic/Title.vue";
+import ArtisansList from "./ArtisansList.vue";
 </script>

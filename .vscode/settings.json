@@ -1,6 +1,9 @@
 {
-  "go.goroot": "/home/matheusalvs/.local/share/mise/installs/go/1.24.4",
+  "go.goroot": "/home/matheus/.local/share/mise/installs/go/1.25.0",
   "go.alternateTools": {
-    "go": "/home/matheusalvs/.local/share/mise/shims/go"
+    "go": "/home/matheus/.local/share/mise/shims/go"
+  },
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "/home/matheus/.local/share/mise/shims/node"
   }
 }

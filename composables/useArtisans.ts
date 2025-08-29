@@ -29,26 +29,6 @@ interface ArtisanListResponse {
   itemsPerPage: number;
 }
 
-interface ArtisanFilters {
-  name?: string;
-  cpf?: string;
-  municipal_seal?: string;
-  birthdateFrom?: string;
-  birthdateTo?: string;
-  artisanRegisterDateFrom?: string;
-  artisanRegisterDateTo?: string;
-  createdAtFrom?: string;
-  createdAtTo?: string;
-  exitDateFrom?: string;
-  exitDateTo?: string;
-  sex?: "M" | "F" | "";
-  uf?: string;
-  estado?: string;
-  obs?: string;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}
-
 export function useArtisans() {
   const loading = ref(false);
   const artisans = ref<Artisan[]>([]);
@@ -57,40 +37,14 @@ export function useArtisans() {
   const itemsPerPage = ref(10);
   const totalPages = ref(0);
   const error = ref<string | null>(null);
-  const filters = ref<ArtisanFilters>({});
 
-  const buildQueryParams = (
-    page: number,
-    limit: number,
-    filterParams: ArtisanFilters = {}
-  ) => {
-    const params = new URLSearchParams();
-
-    params.append("page", page.toString());
-    params.append("limit", limit.toString());
-
-    // Adicionar filtros apenas se tiverem valor
-    Object.entries(filterParams).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        params.append(key, value.toString());
-      }
-    });
-
-    return params.toString();
-  };
-
-  const fetchArtisans = async (
-    page: number = 1,
-    limit: number = 10,
-    filterParams: ArtisanFilters = {}
-  ) => {
+  const fetchArtisans = async (page: number = 1, limit: number = 10) => {
     loading.value = true;
     error.value = null;
 
     try {
-      const queryParams = buildQueryParams(page, limit, filterParams);
       const { data } = await axios.get<ArtisanListResponse>(
-        `/artisan/list?${queryParams}`
+        `/artisan/list?page=${page}&limit=${limit}`
       );
 
       artisans.value = data.data;
@@ -98,26 +52,12 @@ export function useArtisans() {
       currentPage.value = data.currentPage;
       itemsPerPage.value = data.itemsPerPage;
       totalPages.value = data.totalPages;
-      filters.value = filterParams;
     } catch (err: unknown) {
       error.value = formatError(err);
-      throw err;
+      console.error("Erro ao buscar artesãos:", err);
     } finally {
       loading.value = false;
     }
-  };
-
-  const refreshArtisans = () => {
-    return fetchArtisans(currentPage.value, itemsPerPage.value, filters.value);
-  };
-
-  const applyFilters = (newFilters: ArtisanFilters) => {
-    return fetchArtisans(1, itemsPerPage.value, newFilters);
-  };
-
-  const clearFilters = () => {
-    filters.value = {};
-    return fetchArtisans(1, itemsPerPage.value, {});
   };
 
   return {
@@ -127,14 +67,9 @@ export function useArtisans() {
     error: computed(() => error.value),
     totalItems: computed(() => totalItems.value),
     currentPage: computed(() => currentPage.value),
-    itemsPerPage: computed(() => itemsPerPage.value),
     totalPages: computed(() => totalPages.value),
-    filters: computed(() => filters.value),
 
     // Actions
-    fetchArtisans,
-    refreshArtisans,
-    applyFilters,
-    clearFilters
+    fetchArtisans
   };
 }
