@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 import axios from "axios";
 import { formatError } from "~/lib/utils";
 
-interface Artisan {
+export type Artisan = {
   id: string;
   name: string;
   cpf: string;
@@ -19,7 +19,7 @@ interface Artisan {
   created_at: string;
   exit_date: string | null;
   obs: string;
-}
+};
 
 interface ArtisanListResponse {
   data: Artisan[];

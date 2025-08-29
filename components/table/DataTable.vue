@@ -9,20 +9,45 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { computed } from "vue";
+import { Eye, Edit, Trash2 } from "lucide-vue-next";
 
-const props = defineProps<{
+interface Props {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-}>();
+  onView?: (item: any) => void;
+  onEdit?: (item: any) => void;
+  onDelete?: (item: any) => void;
+}
+const hasActions = computed(() =>
+  Boolean(props.onView || props.onEdit || props.onDelete)
+);
+
+const props = defineProps<Props>();
+const actionsColumn: ColumnDef<TData, TValue> = {
+  id: "actions",
+  header: () => "Ações",
+  cell: () => null
+};
+
+const allColumns = (() => {
+  if (hasActions.value) {
+    return [...props.columns, actionsColumn];
+  }
+
+  return props.columns;
+})();
 
 const table = useVueTable({
-  get data() {
-    return props.data;
-  },
-  get columns() {
-    return props.columns;
-  },
+  data: props.data,
+  columns: allColumns,
   getCoreRowModel: getCoreRowModel()
+});
+
+onMounted(() => {
+  console.log("tem actions", hasActions);
+  console.log("TODAS", allColumns);
 });
 </script>
 
@@ -51,16 +76,49 @@ const table = useVueTable({
             :data-state="row.getIsSelected() && 'selected'"
           >
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <template v-if="cell.column.id === 'actions' && hasActions">
+                <div class="flex items-center gap-2">
+                  <Button
+                    v-if="props.onView"
+                    variant="default"
+                    size="icon"
+                    class="h-8 w-8 rounded-full"
+                    @click="props.onView(row.original)"
+                  >
+                    <Eye class="h-4 w-4" />
+                  </Button>
+                  <Button
+                    v-if="props.onEdit"
+                    variant="outline"
+                    size="icon"
+                    class="h-8 w-8 rounded-full"
+                    @click="props.onEdit(row.original)"
+                  >
+                    <Edit class="h-4 w-4" />
+                  </Button>
+                  <Button
+                    v-if="props.onDelete"
+                    variant="destructive"
+                    size="icon"
+                    class="h-8 w-8 rounded-full"
+                    @click="props.onDelete(row.original)"
+                  >
+                    <Trash2 class="h-4 w-4" />
+                  </Button>
+                </div>
+              </template>
+              <template v-else-if="cell.column.id !== 'actions'">
+                <FlexRender
+                  :render="cell.column.columnDef.cell"
+                  :props="cell.getContext()"
+                />
+              </template>
             </TableCell>
           </TableRow>
         </template>
         <template v-else>
           <TableRow>
-            <TableCell :colSpan="props.columns.length" class="h-24 text-center">
+            <TableCell :colSpan="allColumns.length" class="h-24 text-center">
               Nenhum resultado.
             </TableCell>
           </TableRow>

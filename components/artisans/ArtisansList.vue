@@ -2,7 +2,7 @@
 import DataTable from "@/components/table/DataTable.vue";
 import { type ColumnDef } from "@tanstack/table-core";
 import { formatCpf, formatDate } from "~/lib/utils";
-import { useArtisans } from "~/composables/useArtisans";
+import { useArtisans, type Artisan } from "~/composables/useArtisans";
 import { onMounted } from "vue";
 
 const {
@@ -19,7 +19,7 @@ onMounted(() => {
   fetchArtisans();
 });
 
-const columns: ColumnDef<any, any>[] = [
+const columns: ColumnDef<Artisan, any>[] = [
   {
     accessorKey: "name",
     header: "Nome",
@@ -56,6 +56,21 @@ const columns: ColumnDef<any, any>[] = [
     cell: ({ row }) => formatDate(row.getValue("artisan_register_date"))
   }
 ];
+
+const handleView = (artisan: Artisan) => {
+  console.log("Visualizar artesão:", artisan);
+  alert(`Visualizar: ${artisan.name}`);
+};
+
+const handleEdit = (artisan: Artisan) => {
+  console.log("Editar artesão:", artisan);
+  alert(`Editar: ${artisan.name}`);
+};
+
+const handleDelete = (artisan: Artisan) => {
+  console.log("Deletar artesão:", artisan);
+  alert(`Deletar: ${artisan.name}`);
+};
 </script>
 
 <template>
@@ -73,7 +88,14 @@ const columns: ColumnDef<any, any>[] = [
     </div>
 
     <!-- Data table -->
-    <DataTable v-else :columns="columns" :data="artisans" />
+    <DataTable
+      v-else
+      :columns="columns"
+      :data="artisans"
+      :on-view="handleView"
+      :on-edit="handleEdit"
+      :on-delete="handleDelete"
+    />
 
     <!-- Pagination info -->
     <div v-if="!loading && !error" class="text-sm text-gray-500">
