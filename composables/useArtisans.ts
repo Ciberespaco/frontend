@@ -53,7 +53,7 @@ export function useArtisans() {
       totalPages.value = data.totalPages;
     } catch (err: unknown) {
       error.value = formatError(err);
-      console.error("Erro ao buscar artesãos:", err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -63,12 +63,24 @@ export function useArtisans() {
     loading.value = true;
     error.value = null;
     try {
-      console.log("Fetching artisan with ID:", id);
       const { data } = await axios.get<Artisan>(`/artisan/${id}`);
       artisan.value = data;
-      console.log("Artisan fetched successfully:", artisan.value);
     } catch (err: unknown) {
       error.value = formatError(err);
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const deleteArtisan = async (id: string) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      await axios.delete(`/artisan/${id}`);
+    } catch (err: unknown) {
+      error.value = formatError(err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -84,6 +96,7 @@ export function useArtisans() {
     totalPages: computed(() => totalPages.value),
 
     fetchArtisans,
-    fetchArtisan
+    fetchArtisan,
+    deleteArtisan
   };
 }
