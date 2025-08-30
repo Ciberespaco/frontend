@@ -55,7 +55,17 @@
       <!-- Mobile menu trigger (visible on small screens) -->
       <SidebarTrigger class="m-4 inline-block md:hidden" />
       <!-- Nuxt page outlet for the main content -->
-      <NuxtPage />
+      <div class="flex flex-col h-screen px-8 py-16">
+        <span class="flex flex-col mb-8">
+          <Title>{{ title }}</Title>
+          <h6 class="text-lg text-zinc-600">
+            {{ description }}
+          </h6>
+        </span>
+        <section>
+          <NuxtPage />
+        </section>
+      </div>
     </main>
   </SidebarProvider>
 </template>
@@ -77,6 +87,9 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Title from "~/components/basic/Title.vue";
+import { useHeader } from "~/composables/useHeader";
+
+const { title, description } = useHeader();
 
 const navItems = [
   { title: "Home", route: "/", icon: House },

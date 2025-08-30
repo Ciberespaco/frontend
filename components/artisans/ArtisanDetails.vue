@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-6 max-w-4xl">
+  <div class="container mx-auto">
     <div class="flex items-center justify-between mb-8">
       <div>
         <h1 class="text-3xl font-bold text-gray-900">{{ title }}</h1>

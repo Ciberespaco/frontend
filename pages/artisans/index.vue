@@ -1,13 +1,16 @@
 <template>
-  <div class="container mx-auto px-6 py-8">
-    <Artisans />
-  </div>
+  <Artisans />
 </template>
 
 <script setup lang="ts">
-import ArtisansList from "@/components/artisans/Artisans.vue";
+import Artisans from "~/components/artisans/Artisans.vue";
 
-// Definir meta da página
+const { setHeader } = useHeader();
+
+setHeader(
+  "Artesãos",
+  "Esta é a página de artesãos. Aqui você pode ver e gerenciar todos os artesãos cadastrados."
+);
 definePageMeta({
   layout: "logged"
 });

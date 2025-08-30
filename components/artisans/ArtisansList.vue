@@ -64,8 +64,6 @@ const handleView = (artisan: Artisan) => {
 
 <template>
   <div class="space-y-4">
-    <h2 class="text-2xl font-bold">Artesãos Cadastrados</h2>
-
     <!-- Loading state -->
     <div v-if="loading" class="flex justify-center p-8">
       <div class="text-lg">Carregando...</div>

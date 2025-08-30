@@ -3,7 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import EditUser from '~/components/EditUser/EditUser.vue'
+import EditUser from "~/components/EditUser/EditUser.vue";
+const { setHeader } = useHeader();
 
-definePageMeta({ layout: 'logged' })
+setHeader(
+  "Usuário",
+  "Esta é a página de perfil do usuário. Aqui você pode ver e editar suas informações pessoais."
+);
+
+definePageMeta({ layout: "logged" });
 </script>
