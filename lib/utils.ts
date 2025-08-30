@@ -67,3 +67,13 @@ export const formatDate = (dateString: string | null): string => {
     return "-";
   }
 };
+
+export const formatDateTime = (date: string) => {
+  if (!date) return "";
+  return new Date(date).toLocaleString("pt-BR");
+};
+
+export const formatCEP = (cep: string) => {
+  if (!cep) return "";
+  return cep.replace(/(\d{5})(\d{3})/, "$1-$2");
+};

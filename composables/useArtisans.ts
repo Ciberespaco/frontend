@@ -31,22 +31,21 @@ interface ArtisanListResponse {
 
 export function useArtisans() {
   const loading = ref(false);
+  const error = ref<string | null>(null);
   const artisans = ref<Artisan[]>([]);
   const totalItems = ref(0);
   const currentPage = ref(1);
   const itemsPerPage = ref(10);
   const totalPages = ref(0);
-  const error = ref<string | null>(null);
+  const artisan = ref<Artisan | null>(null);
 
   const fetchArtisans = async (page: number = 1, limit: number = 10) => {
     loading.value = true;
     error.value = null;
-
     try {
       const { data } = await axios.get<ArtisanListResponse>(
         `/artisan/list?page=${page}&limit=${limit}`
       );
-
       artisans.value = data.data;
       totalItems.value = data.totalItems;
       currentPage.value = data.currentPage;
@@ -60,16 +59,31 @@ export function useArtisans() {
     }
   };
 
+  const fetchArtisan = async (id: string) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      console.log("Fetching artisan with ID:", id);
+      const { data } = await axios.get<Artisan>(`/artisan/${id}`);
+      artisan.value = data;
+      console.log("Artisan fetched successfully:", artisan.value);
+    } catch (err: unknown) {
+      error.value = formatError(err);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
-    // State
     artisans: computed(() => artisans.value),
+    artisan: computed(() => artisan.value),
     loading: computed(() => loading.value),
     error: computed(() => error.value),
     totalItems: computed(() => totalItems.value),
     currentPage: computed(() => currentPage.value),
     totalPages: computed(() => totalPages.value),
 
-    // Actions
-    fetchArtisans
+    fetchArtisans,
+    fetchArtisan
   };
 }

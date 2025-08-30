@@ -44,11 +44,6 @@ const table = useVueTable({
   columns: allColumns,
   getCoreRowModel: getCoreRowModel()
 });
-
-onMounted(() => {
-  console.log("tem actions", hasActions);
-  console.log("TODAS", allColumns);
-});
 </script>
 
 <template>

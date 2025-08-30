@@ -58,18 +58,7 @@ const columns: ColumnDef<Artisan, any>[] = [
 ];
 
 const handleView = (artisan: Artisan) => {
-  console.log("Visualizar artesão:", artisan);
-  alert(`Visualizar: ${artisan.name}`);
-};
-
-const handleEdit = (artisan: Artisan) => {
-  console.log("Editar artesão:", artisan);
-  alert(`Editar: ${artisan.name}`);
-};
-
-const handleDelete = (artisan: Artisan) => {
-  console.log("Deletar artesão:", artisan);
-  alert(`Deletar: ${artisan.name}`);
+  useRouter().push("/artisans/" + artisan.id);
 };
 </script>
 
@@ -93,8 +82,6 @@ const handleDelete = (artisan: Artisan) => {
       :columns="columns"
       :data="artisans"
       :on-view="handleView"
-      :on-edit="handleEdit"
-      :on-delete="handleDelete"
     />
 
     <!-- Pagination info -->
