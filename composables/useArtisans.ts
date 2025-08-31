@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import axios from "axios";
 import { formatError } from "~/lib/utils";
+import { type ArtisanSchema } from "~/lib/schemas/artisan.schema";
 
 export type Artisan = {
   id: string;
@@ -73,6 +74,20 @@ export function useArtisans() {
     }
   };
 
+  const createArtisan = async (data: ArtisanSchema) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const { data: newArtisan } = await axios.post<Artisan>("/artisan", data);
+      artisans.value.push(newArtisan);
+    } catch (err: unknown) {
+      error.value = formatError(err);
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const deleteArtisan = async (id: string) => {
     loading.value = true;
     error.value = null;
@@ -95,6 +110,7 @@ export function useArtisans() {
     currentPage: computed(() => currentPage.value),
     totalPages: computed(() => totalPages.value),
 
+    createArtisan,
     fetchArtisans,
     fetchArtisan,
     deleteArtisan

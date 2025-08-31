@@ -19,6 +19,10 @@ onMounted(() => {
   fetchArtisans();
 });
 
+async function refresh() {
+  await fetchArtisans(); 
+}
+
 const columns: ColumnDef<Artisan, any>[] = [
   {
     accessorKey: "name",
