@@ -43,3 +43,112 @@ export function formatError(err: unknown): string {
 
   return 'Ocorreu um erro inesperado.'
 }
+
+/**
+ * Formats a CPF string with proper punctuation (e.g., 123.456.789-00)
+ * @param cpf The raw CPF string
+ * @returns Formatted CPF string or dash if null/invalid
+ */
+export const formatCpf = (cpf: string | null): string => {
+  if (!cpf) return '-'
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+}
+
+/**
+ * Formats a date string to Brazilian date format (DD/MM/YYYY)
+ * @param dateString The date string to format
+ * @returns Formatted date or dash if null/invalid
+ */
+export const formatDate = (dateString: string | null): string => {
+  if (!dateString) return '-'
+  try {
+    return new Date(dateString).toLocaleDateString('pt-BR')
+  }
+  catch {
+    return '-'
+  }
+}
+
+export const formatDateTime = (date: string) => {
+  if (!date) return ''
+  return new Date(date).toLocaleString('pt-BR')
+}
+
+export const formatCEP = (cep: string) => {
+  if (!cep) return ''
+  return cep.replace(/(\d{5})(\d{3})/, '$1-$2')
+}
+
+export const isValidCpf = (cpf: string): boolean => {
+  if (!cpf || cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
+    return false
+  }
+
+  let sum = 0
+  let remainder
+
+  for (let i = 1; i <= 9; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (11 - i)
+  }
+  remainder = (sum * 10) % 11
+  if (remainder === 10 || remainder === 11) {
+    remainder = 0
+  }
+  if (remainder !== parseInt(cpf.substring(9, 10))) {
+    return false
+  }
+
+  sum = 0
+  for (let i = 1; i <= 10; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (12 - i)
+  }
+  remainder = (sum * 10) % 11
+  if (remainder === 10 || remainder === 11) {
+    remainder = 0
+  }
+  if (remainder !== parseInt(cpf.substring(10, 11))) {
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Formata um objeto Date para uma string DD/MM/AAAA.
+ * Perfeito para ser exibido em um input com máscara.
+ * @param date - O objeto Date a ser formatado.
+ * @returns A data formatada como string ou uma string vazia.
+ */
+export function formatDateToMask(date: Date | null | undefined): string {
+  if (!date || isNaN(date.getTime())) return ''
+
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0') // Mês do JS é 0-11
+  const year = date.getFullYear()
+
+  return `${day}/${month}/${year}`
+}
+
+/**
+ * Converte uma string de data no formato DD/MM/AAAA para um objeto Date.
+ * Perfeito para receber o valor de um input com máscara.
+ * @param maskedValue - A string da data (ex: "31/08/2025").
+ * @returns Um objeto Date válido ou null.
+ */
+export function parseMaskedDate(
+  maskedValue: string | null | undefined,
+): Date | null {
+  if (!maskedValue || maskedValue.length < 10) return null
+
+  const [day, month, year] = maskedValue.split('/').map(Number)
+
+  if (!day || !month || !year || year < 1000) return null
+
+  const date = new Date(year, month - 1, day)
+
+  if (isNaN(date.getTime()) || date.getDate() !== day) {
+    return null
+  }
+
+  return date
+}
