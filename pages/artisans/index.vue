@@ -3,15 +3,15 @@
 </template>
 
 <script setup lang="ts">
-import Artisans from "~/components/artisans/Artisans.vue";
+import Artisans from '~/components/artisans/Artisans.vue'
 
-const { setHeader } = useHeader();
+const { setHeader } = useHeader()
 
 setHeader(
-  "Artesãos",
-  "Esta é a página de artesãos. Aqui você pode ver e gerenciar todos os artesãos cadastrados."
-);
+  'Artesãos',
+  'Esta é a página de artesãos. Aqui você pode ver e gerenciar todos os artesãos cadastrados.',
+)
 definePageMeta({
-  layout: "logged"
-});
+  layout: 'logged',
+})
 </script>

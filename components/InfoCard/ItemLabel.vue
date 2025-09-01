@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import { Label } from "@/components/ui/label";
+import { Label } from '@/components/ui/label'
 </script>

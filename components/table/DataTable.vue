@@ -1,49 +1,49 @@
 <script lang="ts" setup generic="TData, TValue">
-import type { ColumnDef } from "@tanstack/vue-table";
-import { FlexRender, getCoreRowModel, useVueTable } from "@tanstack/vue-table";
+import type { ColumnDef } from '@tanstack/vue-table'
+import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { computed } from "vue";
-import { Eye, Edit, Trash2 } from "lucide-vue-next";
+  TableRow,
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { computed } from 'vue'
+import { Eye, Edit, Trash2 } from 'lucide-vue-next'
 
 interface Props {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  onView?: (item: any) => void;
-  onEdit?: (item: any) => void;
-  onDelete?: (item: any) => void;
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  onView?: (item: any) => void
+  onEdit?: (item: any) => void
+  onDelete?: (item: any) => void
 }
 const hasActions = computed(() =>
-  Boolean(props.onView || props.onEdit || props.onDelete)
-);
+  Boolean(props.onView || props.onEdit || props.onDelete),
+)
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 const actionsColumn: ColumnDef<TData, TValue> = {
-  id: "actions",
-  header: () => "Ações",
-  cell: () => null
-};
+  id: 'actions',
+  header: () => 'Ações',
+  cell: () => null,
+}
 
 const allColumns = (() => {
   if (hasActions.value) {
-    return [...props.columns, actionsColumn];
+    return [...props.columns, actionsColumn]
   }
 
-  return props.columns;
-})();
+  return props.columns
+})()
 
 const table = useVueTable({
   data: props.data,
   columns: allColumns,
-  getCoreRowModel: getCoreRowModel()
-});
+  getCoreRowModel: getCoreRowModel(),
+})
 </script>
 
 <template>
@@ -54,7 +54,10 @@ const table = useVueTable({
           v-for="headerGroup in table.getHeaderGroups()"
           :key="headerGroup.id"
         >
-          <TableHead v-for="header in headerGroup.headers" :key="header.id">
+          <TableHead
+            v-for="header in headerGroup.headers"
+            :key="header.id"
+          >
             <FlexRender
               v-if="!header.isPlaceholder"
               :render="header.column.columnDef.header"
@@ -70,7 +73,10 @@ const table = useVueTable({
             :key="row.id"
             :data-state="row.getIsSelected() && 'selected'"
           >
-            <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+            <TableCell
+              v-for="cell in row.getVisibleCells()"
+              :key="cell.id"
+            >
               <template v-if="cell.column.id === 'actions' && hasActions">
                 <div class="flex items-center gap-2">
                   <Button
@@ -113,7 +119,10 @@ const table = useVueTable({
         </template>
         <template v-else>
           <TableRow>
-            <TableCell :colSpan="allColumns.length" class="h-24 text-center">
+            <TableCell
+              :col-span="allColumns.length"
+              class="h-24 text-center"
+            >
               Nenhum resultado.
             </TableCell>
           </TableRow>

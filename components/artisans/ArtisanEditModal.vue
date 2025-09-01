@@ -3,20 +3,28 @@
     <DialogTrigger as-child>
       <Button
         variant="outline"
-        class="mb-4"
+        size="sm"
+        class="flex items-center gap-2"
       >
-        Cadastrar Novo Artesão
+        <Pencil class="h-4 w-4" />
+        Editar Artesão
       </Button>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-[625px]">
+    <DialogContent
+      v-if="isOpen"
+      class="sm:max-w-[625px]"
+    >
       <DialogHeader>
-        <DialogTitle>Cadastrar Artesão</DialogTitle>
+        <DialogTitle>Editar Artesão</DialogTitle>
         <DialogDescription>
-          Preencha os campos abaixo para adicionar um novo artesão ao sistema.
+          Altere os campos abaixo para atualizar os dados do artesão.
         </DialogDescription>
       </DialogHeader>
       <div class="grid gap-4 py-4 overflow-y-auto max-h-[70vh] pr-6">
-        <ArtisanForm @submit-success="handleFormSuccess" />
+        <ArtisanEditForm
+          :artisan="props.artisan"
+          @submit-success="handleFormSuccess"
+        />
       </div>
     </DialogContent>
   </Dialog>
@@ -24,6 +32,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import ArtisanEditForm from './ArtisanEditForm.vue'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -33,10 +42,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import ArtisanForm from './ArtisanForm.vue'
+import { Pencil } from 'lucide-vue-next'
+
+const props = defineProps<{
+  artisan: Artisan
+}>()
 
 const emit = defineEmits(['submit-success'])
-
 const isOpen = ref(false)
 
 function handleFormSuccess() {

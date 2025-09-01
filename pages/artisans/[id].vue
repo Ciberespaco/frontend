@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import ArtisanDetails from "~/components/artisans/ArtisanDetails.vue";
-const { setHeader } = useHeader();
+import ArtisanDetails from '~/components/artisans/ArtisanDetails.vue'
+
+const { setHeader } = useHeader()
 
 setHeader(
-  "Detalhes do Artesão",
-  "Esta é a página de detalhes do artesão. Aqui você pode ver todas as informações sobre o artesão selecionado."
-);
+  'Detalhes do Artesão',
+  'Esta é a página de detalhes do artesão. Aqui você pode ver todas as informações sobre o artesão selecionado.',
+)
 
 definePageMeta({
-  layout: "logged"
-});
+  layout: 'logged',
+})
 </script>
 
 <template>

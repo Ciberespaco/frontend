@@ -2,7 +2,10 @@
   <Card>
     <CardHeader>
       <CardTitle class="flex items-center gap-2">
-        <component :is="icon" class="h-5 w-5" />
+        <component
+          :is="icon"
+          class="h-5 w-5"
+        />
         {{ title }}
       </CardTitle>
     </CardHeader>
@@ -13,10 +16,10 @@
 </template>
 
 <script lang="ts" setup>
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 defineProps<{
-  title: string;
-  icon: any;
-}>();
+  title: string
+  icon: any
+}>()
 </script>
