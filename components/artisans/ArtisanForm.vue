@@ -23,7 +23,7 @@ import { useArtisans, type Artisan } from '@/composables/useArtisans'
 import Swal from 'sweetalert2'
 
 const emit = defineEmits(['submit-success'])
-const props = defineProps<{
+defineProps<{
   initialData?: Artisan
 }>()
 
@@ -37,7 +37,7 @@ async function onSubmit(values: ArtisanSchema) {
     Swal.fire({
       icon: 'error',
       title: 'Erro ao criar',
-      text: error.value || 'Ocorreu um erro inesperado.',
+      text: error.value || String(err) || 'Ocorreu um erro inesperado.',
     })
   }
   emit('submit-success', values)

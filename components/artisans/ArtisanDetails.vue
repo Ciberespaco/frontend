@@ -157,7 +157,6 @@ import { useArtisans } from '@/composables/useArtisans'
 import Swal from 'sweetalert2'
 import { Button } from '@/components/ui/button'
 import {
-  Edit,
   Trash2,
   User,
   MapPin,
@@ -219,11 +218,11 @@ const handleDelete = async () => {
 
     router.push('/artisans')
   }
-  catch (err) {
+  catch (err: unknown) {
     Swal.fire({
       icon: 'error',
       title: 'Erro ao deletar',
-      text: error.value || 'Ocorreu um erro inesperado.',
+      text: error.value || String(err) || 'Ocorreu um erro inesperado.',
     })
   }
 }

@@ -48,7 +48,6 @@
 
 <script setup lang="ts">
 import swal from 'sweetalert2'
-import Title from '~/components/basic/Title.vue'
 import Button from '~/components/ui/button/Button.vue'
 import EditUserForm from '~/components/EditUser/EditUserForm.vue'
 import ChangePassword from '~/components/EditUser/ChangePassword.vue'

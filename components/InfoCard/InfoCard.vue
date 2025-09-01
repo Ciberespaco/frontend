@@ -20,6 +20,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 defineProps<{
   title: string
-  icon: any
+  icon: Component
 }>()
 </script>

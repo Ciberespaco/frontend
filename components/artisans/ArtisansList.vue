@@ -18,12 +18,15 @@ const {
 onMounted(() => {
   fetchArtisans()
 })
+defineExpose({
+  refresh,
+})
 
 async function refresh() {
   await fetchArtisans()
 }
 
-const columns: ColumnDef<Artisan, any>[] = [
+const columns: ColumnDef<Artisan, unknown>[] = [
   {
     accessorKey: 'name',
     header: 'Nome',

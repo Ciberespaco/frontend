@@ -10,7 +10,7 @@ import { AutoFormLabel } from '@/components/ui/auto-form'
 import type { FieldProps } from '@/components/ui/auto-form/interface'
 import { Input } from '@/components/ui/input'
 
-const props = defineProps<FieldProps>()
+defineProps<FieldProps>()
 </script>
 
 <template>

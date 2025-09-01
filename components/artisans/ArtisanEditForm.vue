@@ -25,7 +25,6 @@ import { useArtisans } from '@/composables/useArtisans'
 import Swal from 'sweetalert2'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { toCalendarDate } from '@internationalized/date'
 
 const props = defineProps<{
   artisan: Artisan
@@ -52,7 +51,7 @@ watch(
   { immediate: true },
 )
 
-const { editArtisan, loading, error } = useArtisans()
+const { editArtisan, error } = useArtisans()
 
 async function onUpdate(values: ArtisanSchema) {
   try {
@@ -68,7 +67,7 @@ async function onUpdate(values: ArtisanSchema) {
     Swal.fire({
       icon: 'error',
       title: 'Erro ao Atualizar',
-      text: error.value || 'Ocorreu um erro inesperado.',
+      text: error.value || String(err) || 'Ocorreu um erro inesperado.',
     })
   }
 }

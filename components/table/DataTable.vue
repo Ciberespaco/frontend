@@ -16,9 +16,9 @@ import { Eye, Edit, Trash2 } from 'lucide-vue-next'
 interface Props {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  onView?: (item: any) => void
-  onEdit?: (item: any) => void
-  onDelete?: (item: any) => void
+  onView?: (item: TData) => void
+  onEdit?: (item: TData) => void
+  onDelete?: (item: TData) => void
 }
 const hasActions = computed(() =>
   Boolean(props.onView || props.onEdit || props.onDelete),
