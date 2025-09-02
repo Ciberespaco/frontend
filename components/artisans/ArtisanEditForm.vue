@@ -25,6 +25,7 @@ import { useArtisans } from '@/composables/useArtisans'
 import Swal from 'sweetalert2'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
+import { toCalendarDate } from '~/lib/utils'
 
 const props = defineProps<{
   artisan: Artisan
@@ -35,22 +36,21 @@ const form = useForm({
 })
 
 const emit = defineEmits(['submit-success'])
-
 watch(
   () => props.artisan,
   (newArtisan) => {
     if (newArtisan) {
       form.setValues({
         ...newArtisan,
-        birthdate: new Date(newArtisan.birthdate),
-        artisan_register_date: new Date(newArtisan.artisan_register_date),
-        exit_date: newArtisan.exit_date ? new Date(newArtisan.exit_date) : null,
-      })
+        birthdate: toCalendarDate(newArtisan.birthdate),
+        artisan_register_date: toCalendarDate(newArtisan.artisan_register_date),
+        exit_date: toCalendarDate(newArtisan.exit_date),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any)
     }
   },
   { immediate: true },
 )
-
 const { editArtisan, error } = useArtisans()
 
 async function onUpdate(values: ArtisanSchema) {

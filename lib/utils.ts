@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { isAxiosError } from 'axios'
+import { CalendarDate } from '@internationalized/date'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -113,42 +114,11 @@ export const isValidCpf = (cpf: string): boolean => {
   return true
 }
 
-/**
- * Formata um objeto Date para uma string DD/MM/AAAA.
- * Perfeito para ser exibido em um input com máscara.
- * @param date - O objeto Date a ser formatado.
- * @returns A data formatada como string ou uma string vazia.
- */
-export function formatDateToMask(date: Date | null | undefined): string {
-  if (!date || isNaN(date.getTime())) return ''
-
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = String(date.getMonth() + 1).padStart(2, '0') // Mês do JS é 0-11
-  const year = date.getFullYear()
-
-  return `${day}/${month}/${year}`
-}
-
-/**
- * Converte uma string de data no formato DD/MM/AAAA para um objeto Date.
- * Perfeito para receber o valor de um input com máscara.
- * @param maskedValue - A string da data (ex: "31/08/2025").
- * @returns Um objeto Date válido ou null.
- */
-export function parseMaskedDate(
-  maskedValue: string | null | undefined,
-): Date | null {
-  if (!maskedValue || maskedValue.length < 10) return null
-
-  const [day, month, year] = maskedValue.split('/').map(Number)
-
-  if (!day || !month || !year || year < 1000) return null
-
-  const date = new Date(year, month - 1, day)
-
-  if (isNaN(date.getTime()) || date.getDate() !== day) {
-    return null
-  }
-
-  return date
+export function toCalendarDate(
+  date: string | Date | null | undefined,
+): CalendarDate | null {
+  if (!date) return null
+  const d = new Date(date)
+  if (isNaN(d.getTime())) return null
+  return new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate())
 }
