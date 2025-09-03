@@ -6,7 +6,7 @@
     @submit="onSubmit"
   >
     <Button type="submit">
-      Salvar Artesão
+      Salvar Material
     </Button>
   </AutoForm>
 </template>
@@ -21,9 +21,9 @@ import Button from '../ui/button/Button.vue'
 const { createRawMaterial, error } = useRawMaterials()
 
 const emit = defineEmits(['submit-success'])
-const onSubmit = (values: RawMaterialSchema) => {
+const onSubmit = async (values: RawMaterialSchema) => {
   try {
-    createRawMaterial(values)
+    await createRawMaterial(values)
     Swal.fire({
       icon: 'success',
       title: 'Criado!',
