@@ -108,8 +108,8 @@ const navItems = [
   { title: 'Vendas', route: '/vendas', icon: ShoppingCart },
   { title: 'Produtos', route: '/produtos', icon: Package },
   { title: 'Usuários', route: '/usuarios', icon: Users },
-  { title: 'Materiais', route: '/materiais', icon: Archive },
   { title: 'Artesãos', route: '/artisans', icon: Users },
+  { title: 'Materiais', route: '/materials', icon: Archive },
 ]
 const authStore = useAuthStore()
 </script>
