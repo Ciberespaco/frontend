@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import RawMaterials from '~/components/RawMaterials/RawMaterials.vue'
+import RawMaterials from '~/components/rawMaterials/RawMaterials.vue'
 
 const { setHeader } = useHeader()
 
