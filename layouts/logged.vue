@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { House, ShoppingCart, Package, Users, Archive } from 'lucide-vue-next'
+import { House, ShoppingCart, Package, Users, Archive, PenLine } from 'lucide-vue-next'
 import {
   SidebarProvider,
   Sidebar,
@@ -110,6 +110,7 @@ const navItems = [
   { title: 'Usuários', route: '/usuarios', icon: Users },
   { title: 'Artesãos', route: '/artisans', icon: Users },
   { title: 'Materiais', route: '/materials', icon: Archive },
+  { title: 'Técnicas Artesanais', route: '/artisan-techniques', icon: PenLine },
 ]
 const authStore = useAuthStore()
 </script>
