@@ -122,3 +122,11 @@ export function toCalendarDate(
   if (isNaN(d.getTime())) return null
   return new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate())
 }
+
+export function formatCurrency(value: number) {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(value)
+}
+ 
