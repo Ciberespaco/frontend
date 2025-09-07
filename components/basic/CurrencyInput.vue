@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { ref, reactive } from 'vue'
 import { Input } from '@/components/ui/input'
-import { useCurrencyInput } from 'vue-currency-input'
 import {
   FormControl,
   FormDescription,
@@ -13,14 +13,29 @@ import type { FieldProps } from '@/components/ui/auto-form/interface'
 
 defineProps<FieldProps>()
 
-const { inputRef, numberValue, setValue } = useCurrencyInput({
-  currency: 'BRL',
-  locale: 'pt-BR',
-  autoDecimalDigits: true,
-  hideCurrencySymbolOnFocus: true,
-  hideGroupingSeparatorOnFocus: true,
+const inputValue = ref('')
+
+const moneyConfig = reactive({
+  precision: 2,
+  prefix: 'R$ ',
+  thousands: '.',
+  decimal: ',',
+  masked: false,
 })
 
+
+const parseMoneyToIntCents = (value: string): number => {
+  if (!value)
+    return 0
+  
+  let cleanValue = value.replace(/[^0-9,]/g, '').trim()
+
+  cleanValue = cleanValue.replace(',', '.')
+
+  const floatValue = parseFloat(cleanValue) || 0
+
+  return Math.round(floatValue * 100)
+}
 </script>
 
 <template>
@@ -29,16 +44,16 @@ const { inputRef, numberValue, setValue } = useCurrencyInput({
       <AutoFormLabel v-if="!config?.hideLabel" :required="required">
         {{ config?.label || fieldName }}
       </AutoFormLabel>
-
       <FormControl>
-        <Input ref="inputRef" type="text" inputmode="decimal" placeholder="R$ 0,00"
-          :model-value="componentField.modelValue" />
+        <Input type="text" placeholder="R$ 0,00" v-model="inputValue" v-money="moneyConfig" @input="(event: Event) => {
+          const target = event.target as HTMLInputElement
+          const numericValueInCents = parseMoneyToIntCents(target.value)
+          componentField.onChange(numericValueInCents)
+        }" />
       </FormControl>
-
       <FormDescription v-if="config?.description">
         {{ config.description }}
       </FormDescription>
-
       <FormMessage />
     </FormItem>
   </FormField>
