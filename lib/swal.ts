@@ -35,7 +35,7 @@ export const showConfirmDialog = async (options: {
     text,
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#3085d6',
+    confirmButtonColor: '#6c757d',
     cancelButtonColor: '#d33',
     confirmButtonText,
     cancelButtonText: 'Cancelar',

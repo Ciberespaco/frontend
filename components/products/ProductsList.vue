@@ -88,10 +88,9 @@ const columns: ColumnDef<Product, unknown>[] = [
   },
 ]
 
-const handleView = () => {
-  alert("not implemented")
+const handleView = (product: Product) => {
+  useRouter().push('/products/' + product.id)
 }
-
 </script>
 
 <template>

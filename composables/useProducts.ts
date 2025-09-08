@@ -7,6 +7,8 @@ export type Product = {
   artisan: {
     id: string
     name: string
+    cpf: string
+    municipal_seal: string
   }
   product_code: number
   barcode: string
@@ -70,6 +72,34 @@ export function useProducts() {
     }
   }
 
+  const fetchProduct = async (id: string) =>{
+    loading.value = true
+    error.value = null
+    try {
+      const {data} = await axios.get<Product>(`/products/${id}`)
+      product.value = data
+    } catch (err: unknown) {
+      error.value = formatError(err)
+      throw formatError(err)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  
+  const deleteProduct = async (id: string) =>{
+    loading.value = true
+    error.value = null
+    try {
+     await axios.delete<Product>(`/products/${id}`)
+    } catch (err: unknown) {
+      error.value = formatError(err)
+      throw formatError(err)
+    } finally {
+      loading.value = false
+    }
+  }
+
   const createProduct = async (data: ProductSchema) => {
     loading.value = true
     error.value =  null
@@ -93,6 +123,9 @@ export function useProducts() {
     itemsPerPage,
     totalPages,
     fetchProducts,
-    createProduct
+    fetchProduct,
+    createProduct,
+    deleteProduct,
+    product
   }
 }

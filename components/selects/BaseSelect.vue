@@ -33,7 +33,7 @@ defineProps<BaseSelectProps>()
         {{ config?.label || fieldName }}
       </AutoFormLabel>
 
-      <Select :model-value="componentField.modelValue" @update:model-value="componentField.onChange">
+      <Select v-if="options && options.length > 0" v-bind="componentField">
         <FormControl>
           <SelectTrigger>
             <SelectValue :placeholder="placeholder || 'Selecione uma opção...'" />
