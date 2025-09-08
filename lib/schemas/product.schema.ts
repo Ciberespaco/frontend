@@ -2,6 +2,7 @@ import { z } from 'zod'
 import CurrencyInput from '~/components/basic/CurrencyInput.vue'
 import ArtisanSelect from '~/components/selects/ArtisanSelect.vue'
 import ArtisanTechniquesSelect from '~/components/selects/ArtisanTechniquesSelect.vue'
+import ProductCategorySelect from '~/components/selects/ProductCategorySelect.vue'
 import RawMaterialsSelect from '~/components/selects/RawMaterialsSelect.vue'
 import type { FieldConfig } from '~/components/ui/auto-form'
 
@@ -94,6 +95,7 @@ export const fieldConfig = {
   },
   product_category_id: {
     label: 'Categoria do Produto',
+    component: ProductCategorySelect,
   },
   raw_material_id: {
     label: 'Matéria-Prima Principal',

@@ -177,9 +177,11 @@ import InfoCard from '../InfoCard/InfoCard.vue'
 import InfoItem from '../InfoCard/InfoItem.vue'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
-import { showConfirmDialog, ShowCrudErrorAlert, showSuccessToast } from '~/lib/swal'
+import { useProductFormOptions } from '@/composables/useProductFormOptions'
+import { showConfirmDialog, ShowCrudErrorAlert, showErrorAlert, showSuccessToast } from '~/lib/swal'
 import ProductEditModal from './ProductEditModal.vue'
+
+const { loadFormOptions, error: loadFormError } = useProductFormOptions()
 
 defineProps<{
   emptyMessage?: string
@@ -194,6 +196,13 @@ onMounted(() => {
   const productId = route.params.id as string
   if (productId) {
     fetchProduct(productId)
+  }
+  try {
+    loadFormOptions()
+  }
+  catch (err: unknown) {
+    const errMsg = loadFormError.value || String(err)
+    showErrorAlert(errMsg)
   }
 })
 
