@@ -1,5 +1,12 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
+  },
+  "go.goroot": "/home/matheus/.local/share/mise/installs/go/1.25.0",
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "/home/matheus/.local/share/mise/shims/node"
+  },
+  "go.alternateTools": {
+    "go": "/home/matheus/.local/share/mise/shims/go"
   }
 }
