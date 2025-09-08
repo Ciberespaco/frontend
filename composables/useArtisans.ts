@@ -22,7 +22,7 @@ export type Artisan = {
   obs: string
 }
 
-interface ArtisanListResponse {
+export interface ArtisanListResponse {
   data: Artisan[]
   totalItems: number
   totalPages: number

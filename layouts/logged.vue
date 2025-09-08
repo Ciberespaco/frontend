@@ -106,12 +106,12 @@ const { title, description } = useHeader()
 const navItems = [
   { title: 'Home', route: '/', icon: House },
   { title: 'Vendas', route: '/vendas', icon: ShoppingCart },
-  { title: 'Produtos', route: '/produtos', icon: Package },
+  { title: 'Produtos', route: '/products', icon: Package },
   { title: 'Usuários', route: '/usuarios', icon: Users },
   { title: 'Artesãos', route: '/artisans', icon: Users },
   { title: 'Materiais', route: '/materials', icon: Archive },
   { title: 'Categoria de Produtos', route: '/productcategory', icon: Archive },
-  { title: 'Técnicas Artesanais', route: '/artisan-techniques', icon: PenLine }
+  { title: 'Técnicas Artesanais', route: '/artisan-techniques', icon: PenLine },
 ]
 const authStore = useAuthStore()
 </script>

@@ -1,12 +1,4 @@
 <template>
-  <div>
-    <h1 class="text-3xl font-bold text-gray-900">
-      {{ title }}
-    </h1>
-    <p class="text-gray-600 mt-1">
-      {{ subtitle }}
-    </p>
-  </div>
   <div class="flex gap-3 mb-8">
     <ArtisanEditModal
       v-if="artisan"
@@ -28,9 +20,7 @@
     class="flex items-center justify-center py-12"
   >
     <div class="flex items-center gap-3">
-      <div
-        class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
-      ></div>
+      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
       <span class="text-gray-600">Carregando...</span>
     </div>
   </div>
@@ -136,9 +126,7 @@
     v-else
     class="text-center py-12"
   >
-    <div
-      class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4"
-    >
+    <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
       <AlertCircle class="h-12 w-12 text-gray-400" />
     </div>
     <h3 class="text-lg font-medium text-gray-900 mb-2">

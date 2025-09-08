@@ -24,7 +24,7 @@
     <DataTable
       v-else
       :columns="columns"
-      :data="rawMaterials"
+      :data="rawMaterials || []"
       :on-delete="handleDelete"
     />
   </div>

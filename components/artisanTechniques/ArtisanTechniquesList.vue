@@ -23,7 +23,7 @@
     <DataTable
       v-else
       :columns="columns"
-      :data="artisanTechniques"
+      :data="artisanTechniques || []"
       :on-delete="handleDelete"
     />
   </div>
