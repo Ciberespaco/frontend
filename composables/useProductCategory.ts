@@ -7,9 +7,11 @@ export type ProductCategory = {
 }
 
 export const userProductCategory = () => {
+  const productCategoryStore = useProductCategoryStore()
+
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const ProductCategory = ref<ProductCategory[]>([])
+  const productCategory = storeToRefs(productCategoryStore)
   const fetchError = ref<string | null>(null)
 
   const fetchProductCategory = async () => {
@@ -17,7 +19,7 @@ export const userProductCategory = () => {
     fetchError.value = null
     try {
       const { data } = await axios.get(`/product-category`)
-      ProductCategory.value = data
+      productCategoryStore.setCategories(data)
     }
     catch (err: unknown) {
       fetchError.value = formatError(err)
@@ -33,6 +35,8 @@ export const userProductCategory = () => {
     error.value = null
     try {
       await axios.post(`/product-category`, data)
+      productCategoryStore.clearCategories()
+      await fetchProductCategory()
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -48,6 +52,8 @@ export const userProductCategory = () => {
     error.value = null
     try {
       await axios.delete(`/product-category/${id}`)
+      productCategoryStore.clearCategories()
+      await fetchProductCategory()
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -62,7 +68,7 @@ export const userProductCategory = () => {
     loading,
     error,
     fetchError,
-    ProductCategory,
+    productCategory,
     createProductCategory,
     fetchProductCategory,
     deleteProductCategory,

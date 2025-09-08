@@ -1,11 +1,14 @@
 import { useRawMaterials } from './useRawMaterials'
 import { useArtisansStore } from '#imports'
+import { useArtisanTechniques } from './useArtisanTechniques'
+import { userProductCategory } from './useProductCategory'
 import { formatError } from '~/lib/utils'
 
 export const useProductFormOptions = () => {
   const artisansStore = useArtisansStore()
   const { fetchRawMaterials } = useRawMaterials()
   const { fetchArtisanTechniques } = useArtisanTechniques()
+  const { fetchProductCategory } = userProductCategory()
 
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -18,6 +21,7 @@ export const useProductFormOptions = () => {
         artisansStore.initialize(),
         fetchRawMaterials(),
         fetchArtisanTechniques(),
+        fetchProductCategory(),
       ])
     }
     catch (err: unknown) {
