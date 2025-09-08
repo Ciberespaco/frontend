@@ -27,11 +27,9 @@ const moneyConfig = reactive({
 const parseMoneyToIntCents = (value: string): number => {
   if (!value)
     return 0
-  
+
   let cleanValue = value.replace(/[^0-9,]/g, '').trim()
-
   cleanValue = cleanValue.replace(',', '.')
-
   const floatValue = parseFloat(cleanValue) || 0
 
   return Math.round(floatValue * 100)

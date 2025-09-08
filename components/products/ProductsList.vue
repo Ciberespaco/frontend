@@ -36,7 +36,6 @@ const columns: ColumnDef<Product, unknown>[] = [
       const artisan: { id: string, name: string } = row.getValue('artisan')
       if (!artisan) return null
 
-      // Usamos h(Componente, props, children)
       return h(
         NuxtLink,
         { to: `/artisans/${artisan.id}`, class: 'text-blue-600 hover:underline' },

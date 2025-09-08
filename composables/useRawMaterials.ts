@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { formatError } from '~/lib/utils'
+import { useRawMaterialsStore } from '~/stores/useRawMaterialsStore'
 
 export type RawMaterial = {
   id: string
@@ -7,17 +8,23 @@ export type RawMaterial = {
 }
 
 export const useRawMaterials = () => {
+  const rawMaterialsStore = useRawMaterialsStore()
+
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const rawMaterials = ref<RawMaterial[]>([])
+  const { rawMaterials } = storeToRefs(rawMaterialsStore)
   const fetchError = ref<string | null>(null)
 
   const fetchRawMaterials = async () => {
+  if (rawMaterials.value) {
+      return
+    }
+
     loading.value = true
     fetchError.value = null
     try {
       const { data } = await axios.get(`/raw-materials`)
-      rawMaterials.value = data
+      rawMaterialsStore.setRawMaterials(data)
     }
     catch (err: unknown) {
       fetchError.value = formatError(err)
@@ -33,6 +40,8 @@ export const useRawMaterials = () => {
     error.value = null
     try {
       await axios.post(`/raw-materials`, data)
+      rawMaterialsStore.clearRawMaterials()
+      await fetchRawMaterials()
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -48,6 +57,8 @@ export const useRawMaterials = () => {
     error.value = null
     try {
       await axios.delete(`/raw-materials/${id}`)
+      rawMaterialsStore.clearRawMaterials()
+      await fetchRawMaterials()
     }
     catch (err: unknown) {
       error.value = formatError(err)

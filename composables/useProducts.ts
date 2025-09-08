@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { ProductSchema } from '~/lib/schemas/product.schema'
 import { formatError } from '~/lib/utils'
 
 export type Product = {
@@ -69,6 +70,20 @@ export function useProducts() {
     }
   }
 
+  const createProduct = async (data: ProductSchema) => {
+    loading.value = true
+    error.value =  null
+    try {
+      await axios.post<ProductSchema>('/products', data)
+    } catch (err : unknown) {
+      error.value = formatError(err)
+      throw formatError(err)
+    } finally {
+      loading.value = false
+      fetchProducts()
+    }
+  }
+
   return {
     loading,
     error,
@@ -77,6 +92,7 @@ export function useProducts() {
     currentPage,
     itemsPerPage,
     totalPages,
-    fetchProducts
+    fetchProducts,
+    createProduct
   }
 }

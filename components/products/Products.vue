@@ -1,5 +1,6 @@
 <template>
-  <ProductsList/>
+  <ProductsProductCreateFormModal />
+  <ProductsList />
 </template>
 
 <script lang="ts" setup>
