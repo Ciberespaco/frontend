@@ -96,7 +96,8 @@ const navItems = [
   { title: 'Usuários', route: '/usuarios', icon: Users },
   { title: 'Artesãos', route: '/artisans', icon: Users },
   { title: 'Materiais', route: '/materials', icon: Archive },
-  { title: 'Técnicas Artesanais', route: '/artisan-techniques', icon: PenLine },
+  { title: 'Categoria de Produtos', route: '/productcategory', icon: Archive },
+  { title: 'Técnicas Artesanais', route: '/artisan-techniques', icon: PenLine }
 ]
 const authStore = useAuthStore()
 </script>
