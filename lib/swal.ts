@@ -12,7 +12,6 @@ export const showSuccessToast = (title: string) => {
   })
 }
 
-
 export const showErrorAlert = (text: string, title = 'Ocorreu um Erro!') => {
   Swal.fire({
     title,
@@ -21,7 +20,6 @@ export const showErrorAlert = (text: string, title = 'Ocorreu um Erro!') => {
     confirmButtonColor: '#d33',
   })
 }
-
 
 export const showConfirmDialog = async (options: {
   title: string
@@ -35,8 +33,8 @@ export const showConfirmDialog = async (options: {
     text,
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#6c757d',
-    cancelButtonColor: '#d33',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#6c757d',
     confirmButtonText,
     cancelButtonText: 'Cancelar',
   })

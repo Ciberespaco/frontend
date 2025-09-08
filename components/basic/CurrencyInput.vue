@@ -24,20 +24,26 @@ const moneyConfig = reactive({
 </script>
 
 <template>
-  <FormField :name="fieldName" v-slot="{ componentField, value }">
+  <FormField
+    v-slot="{ componentField, value }"
+    :name="fieldName"
+  >
     <FormItem v-bind="$attrs">
-      <AutoFormLabel v-if="!config?.label" :required="required">
+      <AutoFormLabel
+        v-if="!config?.label"
+        :required="required"
+      >
         {{ config?.label || fieldName }}
       </AutoFormLabel>
       <FormControl>
         <Input
+          v-money="moneyConfig"
           type="text"
           placeholder="R$ 0,00"
-          v-money="moneyConfig"
-          
+
           :model-value="value"
 
-             @update:model-value="(newValue) => {
+          @update:model-value="(newValue) => {
             const digitsOnly = String(newValue || '').replace(/\D/g, '') || '0'
             const cents = parseInt(digitsOnly, 10)
             componentField.onChange(cents)

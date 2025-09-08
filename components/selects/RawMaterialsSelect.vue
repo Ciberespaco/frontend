@@ -11,8 +11,15 @@ const rawMaterials = computed(() => rawMaterialsStore.rawMaterials)
 
 <template>
   <div>
-    <BaseSelect :field-name="fieldName" :config="config" :required="required" :disabled="disabled"
-      :options="rawMaterials || []" option-label="name" option-value="id"
-      placeholder="Selecione uma matéria-prima..." />
+    <BaseSelect
+      :field-name="fieldName"
+      :config="config"
+      :required="required"
+      :disabled="disabled"
+      :options="rawMaterials || []"
+      option-label="name"
+      option-value="id"
+      placeholder="Selecione uma matéria-prima..."
+    />
   </div>
 </template>

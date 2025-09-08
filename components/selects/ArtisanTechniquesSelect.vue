@@ -11,7 +11,15 @@ const artisanTechniques = computed(() => artisanTechniquesStore.artisanTechnique
 
 <template>
   <div>
-    <BaseSelect :field-name="fieldName" :config="config" :required="required" :disabled="disabled"
-      :options="artisanTechniques || []" option-label="name" option-value="id" placeholder="Selecione uma técnica..." />
+    <BaseSelect
+      :field-name="fieldName"
+      :config="config"
+      :required="required"
+      :disabled="disabled"
+      :options="artisanTechniques || []"
+      option-label="name"
+      option-value="id"
+      placeholder="Selecione uma técnica..."
+    />
   </div>
 </template>

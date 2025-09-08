@@ -5,7 +5,6 @@ import { formatCurrency, formatDate } from '~/lib/utils'
 import { useProducts, type Product } from '~/composables/useProducts'
 import { NuxtLink } from '#components'
 
-
 const {
   fetchProducts,
   error,
@@ -39,7 +38,7 @@ const columns: ColumnDef<Product, unknown>[] = [
       return h(
         NuxtLink,
         { to: `/artisans/${artisan.id}`, class: 'text-blue-600 hover:underline' },
-        () => artisan.name
+        () => artisan.name,
       )
     },
   },
@@ -96,24 +95,38 @@ const handleView = (product: Product) => {
 <template>
   <div class="space-y-4">
     <!-- Loading state -->
-    <div v-if="loading" class="flex justify-center p-8">
+    <div
+      v-if="loading"
+      class="flex justify-center p-8"
+    >
       <div class="text-lg">
         Carregando...
       </div>
     </div>
 
     <!-- Error state -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 rounded p-4">
+    <div
+      v-else-if="error"
+      class="bg-red-50 border border-red-200 rounded p-4"
+    >
       <p class="text-red-700">
         {{ error }}
       </p>
     </div>
 
     <!-- Data table -->
-    <DataTable v-else :columns="columns" :data="products" :on-view="handleView" />
+    <DataTable
+      v-else
+      :columns="columns"
+      :data="products"
+      :on-view="handleView"
+    />
 
     <!-- Pagination info -->
-    <div v-if="!loading && !error" class="text-sm text-gray-500">
+    <div
+      v-if="!loading && !error"
+      class="text-sm text-gray-500"
+    >
       Total de produtos: {{ totalItems }} | Página {{ currentPage }} de
       {{ totalPages }}
     </div>

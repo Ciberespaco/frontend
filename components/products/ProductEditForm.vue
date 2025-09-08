@@ -1,6 +1,12 @@
 <template>
-  <AutoForm v-if="props.product" :schema="productSchema" :field-config="fieldConfig" :form="form" class="space-y-4"
-    @submit="onUpdate">
+  <AutoForm
+    v-if="props.product"
+    :schema="productSchema"
+    :field-config="fieldConfig"
+    :form="form"
+    class="space-y-4"
+    @submit="onUpdate"
+  >
     <Button type="submit">
       Salvar Alterações
     </Button>
@@ -14,12 +20,12 @@ import { productSchema, fieldConfig, type ProductSchema } from '~/lib/schemas/pr
 import { useForm } from 'vee-validate'
 import Button from '../ui/button/Button.vue'
 import type { Product } from '~/composables/useProducts'
+import { useProducts } from '~/composables/useProducts'
+import { ShowCrudErrorAlert, showSuccessToast } from '~/lib/swal'
 
 const props = defineProps<{
   product: Product
 }>()
-
-onMounted(() => { console.log(props.product) })
 
 const form = useForm<ProductSchema>({
   validationSchema: toTypedSchema(productSchema),
@@ -42,9 +48,17 @@ watch(
   },
   { immediate: true },
 )
+const { editProduct } = useProducts()
+const emit = defineEmits(['submit-success'])
 
 const onUpdate = (values: ProductSchema) => {
-  console.log('Dados prontos para enviar:', values)
-  alert('Formulário enviado com sucesso! Verifique o console.')
+  try {
+    editProduct(values, props.product.id)
+    showSuccessToast('Produto alterado com sucesso!')
+    emit('submit-success', values)
+  }
+  catch (err: unknown) {
+    ShowCrudErrorAlert('produto', 'editar', String(err))
+  }
 }
 </script>

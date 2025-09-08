@@ -33,7 +33,7 @@ export type Product = {
   }
 }
 
-interface ProductListResponse  {
+interface ProductListResponse {
   data: Product[]
   totalItems: number
   totalPages: number
@@ -42,19 +42,19 @@ interface ProductListResponse  {
 }
 
 export function useProducts() {
-    const loading = ref(false)
-    const error = ref<string | null>(null)
-    const products = ref<Product[]>([])
-    const totalItems = ref(0)
-    const currentPage = ref(1)
-    const itemsPerPage = ref(10)
-    const totalPages = ref(0)
-    const product = ref<Product | null>(null)
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+  const products = ref<Product[]>([])
+  const totalItems = ref(0)
+  const currentPage = ref(1)
+  const itemsPerPage = ref(10)
+  const totalPages = ref(0)
+  const product = ref<Product | null>(null)
 
-    const fetchProducts = async  (page: number = 1, limit: number = 10) => {
+  const fetchProducts = async (page: number = 1, limit: number = 10) => {
     loading.value = true
     error.value = null
-    try{
+    try {
       const { data } = await axios.get<ProductListResponse>(
         `/products?page=${page}&limit=${limit}`,
       )
@@ -64,53 +64,75 @@ export function useProducts() {
       itemsPerPage.value = data.itemsPerPage
       totalPages.value = data.totalPages
     }
-    catch(err: unknown){
-          error.value = formatError(err)
-            throw err
-    }finally{
+    catch (err: unknown) {
+      error.value = formatError(err)
+      throw err
+    }
+    finally {
       loading.value = false
     }
   }
 
-  const fetchProduct = async (id: string) =>{
+  const fetchProduct = async (id: string) => {
     loading.value = true
     error.value = null
     try {
-      const {data} = await axios.get<Product>(`/products/${id}`)
+      const { data } = await axios.get<Product>(`/products/${id}`)
       product.value = data
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       error.value = formatError(err)
       throw formatError(err)
-    } finally {
+    }
+    finally {
       loading.value = false
     }
   }
 
-  
-  const deleteProduct = async (id: string) =>{
+  const deleteProduct = async (id: string) => {
     loading.value = true
     error.value = null
     try {
-     await axios.delete<Product>(`/products/${id}`)
-    } catch (err: unknown) {
+      await axios.delete<Product>(`/products/${id}`)
+    }
+    catch (err: unknown) {
       error.value = formatError(err)
       throw formatError(err)
-    } finally {
+    }
+    finally {
       loading.value = false
     }
   }
 
   const createProduct = async (data: ProductSchema) => {
     loading.value = true
-    error.value =  null
+    error.value = null
     try {
       await axios.post<ProductSchema>('/products', data)
-    } catch (err : unknown) {
+    }
+    catch (err: unknown) {
       error.value = formatError(err)
       throw formatError(err)
-    } finally {
+    }
+    finally {
       loading.value = false
       fetchProducts()
+    }
+  }
+
+  const editProduct = async (data: ProductSchema, id: string) => {
+    loading.value = true
+    error.value = null
+    try {
+      await axios.patch<ProductSchema>(`/products/${id}`, data)
+    }
+    catch (err: unknown) {
+      error.value = formatError(err)
+      throw formatError(err)
+    }
+    finally {
+      loading.value = false
+      fetchProduct(id)
     }
   }
 
@@ -125,7 +147,8 @@ export function useProducts() {
     fetchProducts,
     fetchProduct,
     createProduct,
+    editProduct,
     deleteProduct,
-    product
+    product,
   }
 }

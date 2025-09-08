@@ -5,7 +5,7 @@ import { formatError } from '~/lib/utils'
 interface Artisan {
   id: string
   name: string
-  cpf: string 
+  cpf: string
 }
 
 interface ArtisansState {
@@ -14,9 +14,8 @@ interface ArtisansState {
   error: string | null
 }
 
-
 export const useArtisansStore = defineStore('artisans', {
-  state: ():ArtisansState => ({
+  state: (): ArtisansState => ({
     artisans: null,
     loading: false,
     error: null,
@@ -25,30 +24,31 @@ export const useArtisansStore = defineStore('artisans', {
   actions: {
     async initialize() {
       if (this.artisans) {
-        return;
+        return
       }
-      
+
       this.loading = true
       this.error = null
       try {
-        const { data: response } = await axios.get<ArtisanListResponse>('/artisan/list');
-        
+        const { data: response } = await axios.get<ArtisanListResponse>('/artisan/list')
+
         const mappedData = response.data.map(artisanFromApi => ({
           id: artisanFromApi.id,
           name: artisanFromApi.name,
           cpf: artisanFromApi.cpf,
-        }));
-        
-        
-        this.artisans = mappedData;
-      } catch (err: unknown) {
+        }))
+
+        this.artisans = mappedData
+      }
+      catch (err: unknown) {
         this.error = formatError(err)
-        throw  err
-      } finally {
+        throw err
+      }
+      finally {
         this.loading = false
       }
     },
-    
+
     async refresh() {
       this.artisans = null
       await this.initialize()

@@ -4,6 +4,5 @@
 </template>
 
 <script lang="ts" setup>
-import ProductsList from './ProductsList.vue';
-
+import ProductsList from './ProductsList.vue'
 </script>

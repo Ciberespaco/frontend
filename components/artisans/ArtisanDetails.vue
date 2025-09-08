@@ -1,43 +1,110 @@
 <template>
   <div class="flex gap-3 mb-8">
-    <ArtisanEditModal v-if="artisan" :artisan="artisan" @submit-success="handleEditSuccess" />
-    <Button variant="destructive" size="sm" class="flex items-center gap-2" @click="handleDelete">
+    <ArtisanEditModal
+      v-if="artisan"
+      :artisan="artisan"
+      @submit-success="handleEditSuccess"
+    />
+    <Button
+      variant="destructive"
+      size="sm"
+      class="flex items-center gap-2"
+      @click="handleDelete"
+    >
       <Trash2 class="h-4 w-4" />
       Excluir
     </Button>
   </div>
-  <div v-if="loading" class="flex items-center justify-center py-12">
+  <div
+    v-if="loading"
+    class="flex items-center justify-center py-12"
+  >
     <div class="flex items-center gap-3">
       <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
       <span class="text-gray-600">Carregando...</span>
     </div>
   </div>
 
-  <div v-else-if="artisan" class="space-y-6">
-    <InfoCard title="Informações Pessoais" :icon="User">
-      <InfoItem label="Nome Completo" :value="artisan.name" />
-      <InfoItem label="CPF" :value="formatCpf(artisan.cpf)" mono />
-      <InfoItem label="Sexo" variant="badge">
+  <div
+    v-else-if="artisan"
+    class="space-y-6"
+  >
+    <InfoCard
+      title="Informações Pessoais"
+      :icon="User"
+    >
+      <InfoItem
+        label="Nome Completo"
+        :value="artisan.name"
+      />
+      <InfoItem
+        label="CPF"
+        :value="formatCpf(artisan.cpf)"
+        mono
+      />
+      <InfoItem
+        label="Sexo"
+        variant="badge"
+      >
         <Badge :variant="artisan.sex === 'M' ? 'default' : 'secondary'">
           {{ artisan.sex === "M" ? "Masculino" : "Feminino" }}
         </Badge>
       </InfoItem>
-      <InfoItem label="Data de Nascimento" :value="formatDate(artisan.birthdate)" />
+      <InfoItem
+        label="Data de Nascimento"
+        :value="formatDate(artisan.birthdate)"
+      />
     </InfoCard>
 
-    <InfoCard title="Endereço" :icon="MapPin">
-      <InfoItem label="CEP" :value="formatCEP(artisan.cep)" mono />
-      <InfoItem label="Número" :value="artisan.house_number" />
-      <InfoItem label="Bairro" :value="artisan.bairro" />
-      <InfoItem label="Cidade" :value="artisan.localidade" />
-      <InfoItem label="Estado" :value="`${artisan.estado} (${artisan.uf})`" />
+    <InfoCard
+      title="Endereço"
+      :icon="MapPin"
+    >
+      <InfoItem
+        label="CEP"
+        :value="formatCEP(artisan.cep)"
+        mono
+      />
+      <InfoItem
+        label="Número"
+        :value="artisan.house_number"
+      />
+      <InfoItem
+        label="Bairro"
+        :value="artisan.bairro"
+      />
+      <InfoItem
+        label="Cidade"
+        :value="artisan.localidade"
+      />
+      <InfoItem
+        label="Estado"
+        :value="`${artisan.estado} (${artisan.uf})`"
+      />
     </InfoCard>
 
-    <InfoCard title="Informações do Registro" :icon="FileText">
-      <InfoItem label="Selo Municipal" :value="artisan.municipal_seal" mono />
-      <InfoItem label="Data de Registro" :value="formatDate(artisan.artisan_register_date)" />
-      <InfoItem label="Data de Criação" :value="formatDateTime(artisan.created_at)" />
-      <InfoItem v-if="artisan.exit_date" label="Data de Saída" :value="formatDate(artisan.exit_date)" />
+    <InfoCard
+      title="Informações do Registro"
+      :icon="FileText"
+    >
+      <InfoItem
+        label="Selo Municipal"
+        :value="artisan.municipal_seal"
+        mono
+      />
+      <InfoItem
+        label="Data de Registro"
+        :value="formatDate(artisan.artisan_register_date)"
+      />
+      <InfoItem
+        label="Data de Criação"
+        :value="formatDateTime(artisan.created_at)"
+      />
+      <InfoItem
+        v-if="artisan.exit_date"
+        label="Data de Saída"
+        :value="formatDate(artisan.exit_date)"
+      />
     </InfoCard>
 
     <Card v-if="artisan.obs">
@@ -55,7 +122,10 @@
     </Card>
   </div>
 
-  <div v-else class="text-center py-12">
+  <div
+    v-else
+    class="text-center py-12"
+  >
     <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
       <AlertCircle class="h-12 w-12 text-gray-400" />
     </div>

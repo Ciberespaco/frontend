@@ -1,7 +1,10 @@
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="outline" class="mb-4">
+      <Button
+        variant="outline"
+        class="mb-4"
+      >
         Cadastrar Novo Produto
       </Button>
     </DialogTrigger>

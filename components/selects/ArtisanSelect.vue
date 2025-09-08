@@ -7,12 +7,19 @@ defineProps<FieldProps>()
 
 const artisansStore = useArtisansStore()
 const artisans = computed(() => artisansStore.artisans)
-
 </script>
 
 <template>
   <div>
-    <BaseSelect :field-name="fieldName" :config="config" :required="required" :disabled="disabled"
-      :options="artisans || []" option-label="name" option-value="id" placeholder="Selecione um artesão..." />
+    <BaseSelect
+      :field-name="fieldName"
+      :config="config"
+      :required="required"
+      :disabled="disabled"
+      :options="artisans || []"
+      option-label="name"
+      option-value="id"
+      placeholder="Selecione um artesão..."
+    />
   </div>
 </template>

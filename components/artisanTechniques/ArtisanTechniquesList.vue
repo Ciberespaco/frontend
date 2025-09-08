@@ -1,20 +1,31 @@
 <template>
   <div class="space-y-4">
     <!-- Loading state -->
-    <div v-if="loading" class="flex justify-center p-8">
+    <div
+      v-if="loading"
+      class="flex justify-center p-8"
+    >
       <div class="text-lg">
         Carregando...
       </div>
     </div>
 
-    <div v-else-if="fetchError" class="bg-red-50 border border-red-200 rounded p-4">
+    <div
+      v-else-if="fetchError"
+      class="bg-red-50 border border-red-200 rounded p-4"
+    >
       <p class="text-red-700">
         {{ fetchError }}
       </p>
     </div>
 
     <!-- Data table -->
-    <DataTable v-else :columns="columns" :data="artisanTechniques || []" :on-delete="handleDelete" />
+    <DataTable
+      v-else
+      :columns="columns"
+      :data="artisanTechniques || []"
+      :on-delete="handleDelete"
+    />
   </div>
 </template>
 

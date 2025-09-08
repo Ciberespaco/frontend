@@ -129,4 +129,3 @@ export function formatCurrency(value: number) {
     currency: 'BRL',
   }).format(value)
 }
- 

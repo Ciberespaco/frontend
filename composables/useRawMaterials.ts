@@ -16,7 +16,7 @@ export const useRawMaterials = () => {
   const fetchError = ref<string | null>(null)
 
   const fetchRawMaterials = async () => {
-  if (rawMaterials.value) {
+    if (rawMaterials.value) {
       return
     }
 
