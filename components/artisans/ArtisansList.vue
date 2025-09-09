@@ -55,7 +55,7 @@ const columns: ColumnDef<Artisan, unknown>[] = [
   {
     accessorKey: 'localidade',
     header: 'Cidade',
-    cell: ({ row }) => `${row.getValue('localidade')}/${row.getValue('uf')}`,
+    cell: ({ row }) => `${row.getValue('localidade')}/${row.original.uf}`,
   },
   {
     accessorKey: 'artisan_register_date',

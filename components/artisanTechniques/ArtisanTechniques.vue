@@ -10,6 +10,8 @@ import ArtisanTechniquesList from './ArtisanTechniquesList.vue'
 const artisanTechniquesListComponent = ref()
 
 const onArtisanTechniqueCreated = () => {
-  artisanTechniquesListComponent.value.refresh()
+  if (artisanTechniquesListComponent.value?.refresh) {
+    artisanTechniquesListComponent.value.refresh()
+  }
 }
 </script>

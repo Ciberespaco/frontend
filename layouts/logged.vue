@@ -107,7 +107,7 @@ const navItems = [
   { title: 'Home', route: '/', icon: House },
   { title: 'Vendas', route: '/vendas', icon: ShoppingCart },
   { title: 'Produtos', route: '/products', icon: Package },
-  { title: 'Usuários', route: '/usuarios', icon: Users },
+  // { title: 'Usuários', route: '/usuarios', icon: Users }, // Comentado - rota não existe
   { title: 'Artesãos', route: '/artisans', icon: Users },
   { title: 'Materiais', route: '/materials', icon: Archive },
   { title: 'Categoria de Produtos', route: '/productcategory', icon: Archive },

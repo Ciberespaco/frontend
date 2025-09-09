@@ -10,6 +10,6 @@ import RawMaterialsCreateModal from './RawMaterialsCreateModal.vue'
 const rawMaterialsListComponent = ref()
 
 const onRawMaterialCreated = () => {
-  rawMaterialsListComponent.value.refresh()
+  rawMaterialsListComponent.value?.refresh()
 }
 </script>

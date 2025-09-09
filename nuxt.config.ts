@@ -13,12 +13,24 @@ export default defineNuxtConfig({
   ],
   ssr: false,
   devtools: { enabled: true },
+
+  // Configuração para melhor tratamento de erros
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+    },
+  },
   css: ['~/assets/css/tailwind.css'],
 
   runtimeConfig: {
     public: {
       backendURL: process.env.BACKEND_URL,
     },
+  },
+
+  experimental: {
+    payloadExtraction: false, // Previne alguns erros de hidratação
   },
   compatibilityDate: '2025-05-15',
   vite: {

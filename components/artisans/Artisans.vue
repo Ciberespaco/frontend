@@ -10,6 +10,8 @@ import ArtisanFormModal from './ArtisanFormModal.vue'
 const artisansListComponent = ref()
 
 const onArtisanCreated = () => {
-  artisansListComponent.value.refresh()
+  if (artisansListComponent.value?.refresh) {
+    artisansListComponent.value.refresh()
+  }
 }
 </script>

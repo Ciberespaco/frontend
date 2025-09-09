@@ -22,7 +22,7 @@ export const artisanSchema = z.object({
   bairro: z.string().min(1, 'O bairro é obrigatório.'),
   localidade: z.string().min(1, 'A localidade é obrigatória.'),
   uf: z.string().length(2, 'A UF deve ter 2 caracteres.'),
-  estado: z.string().min(1, 'O estado é obrigatório.'),
+  // estado: z.string().min(1, 'O estado é obrigatório.'),
   artisan_register_date: z.coerce.date({
     required_error: 'A data de registro é obrigatória.',
   }),

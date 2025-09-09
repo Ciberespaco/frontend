@@ -10,6 +10,6 @@ import ProductCategoryCreateModal from './ProductCategoryCreateModal.vue'
 const ProductCategoryListComponent = ref()
 
 const onProductCategoryCreated = () => {
-  ProductCategoryListComponent.value.refresh()
+  ProductCategoryListComponent.value?.refresh()
 }
 </script>
