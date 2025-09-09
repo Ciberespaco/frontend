@@ -222,7 +222,7 @@ const handleDelete = async () => {
 
   try {
     await deleteProduct(productId)
-    showSuccessToast('Produto excluído com sucesso!')
+    await showSuccessToast('Produto excluído com sucesso!')
     router.push('/products')
   }
   catch (err: unknown) {
