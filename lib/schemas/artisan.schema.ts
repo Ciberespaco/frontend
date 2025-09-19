@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { isValidCpf } from '../utils'
 import CpfInput from '~/components/basic/CpfInput.vue'
 import type { FieldConfig } from '~/components/ui/auto-form'
+import BrazilianStateSelect from '~/components/selects/BrazilianStateSelect.vue'
 
 export const artisanSchema = z.object({
   name: z
@@ -22,7 +23,6 @@ export const artisanSchema = z.object({
   bairro: z.string().min(1, 'O bairro é obrigatório.'),
   localidade: z.string().min(1, 'A localidade é obrigatória.'),
   uf: z.string().length(2, 'A UF deve ter 2 caracteres.'),
-  // estado: z.string().min(1, 'O estado é obrigatório.'),
   artisan_register_date: z.coerce.date({
     required_error: 'A data de registro é obrigatória.',
   }),
@@ -62,8 +62,7 @@ export const fieldConfig = {
   house_number: { label: 'Número' },
   bairro: { label: 'Bairro' },
   localidade: { label: 'Localidade (Cidade)' },
-  uf: { label: 'UF' },
-  estado: { label: 'Estado' },
+  uf: { label: 'Estado', component: BrazilianStateSelect },
   birthdate: { label: 'Data de Nascimento', component: 'date' },
   artisan_register_date: {
     label: 'Data de Registro do Artesão',

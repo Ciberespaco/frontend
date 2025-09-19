@@ -1,10 +1,5 @@
 <template>
-  <AutoForm
-    :schema="artisanSchema"
-    :field-config="fieldConfig"
-    class="space-y-4"
-    @submit="onSubmit"
-  >
+  <AutoForm :schema="artisanSchema" :field-config="fieldConfig" class="space-y-4" @submit="onSubmit">
     <Button type="submit">
       Salvar Artesão
     </Button>
@@ -21,6 +16,7 @@ import {
 } from '@/lib/schemas/artisan.schema'
 import { useArtisans, type Artisan } from '@/composables/useArtisans'
 import Swal from 'sweetalert2'
+import { showSuccessToast } from '~/lib/swal'
 
 const emit = defineEmits(['submit-success'])
 defineProps<{
@@ -31,7 +27,8 @@ const { createArtisan, error } = useArtisans()
 async function onSubmit(values: ArtisanSchema) {
   try {
     await createArtisan(values)
-    await Swal.fire('Criado!', 'O artesão foi criado com sucesso.', 'success')
+    showSuccessToast('Artesão criado com sucesso!')
+    emit('submit-success', values)
   }
   catch (err: unknown) {
     Swal.fire({
@@ -40,6 +37,5 @@ async function onSubmit(values: ArtisanSchema) {
       text: error.value || String(err) || 'Ocorreu um erro inesperado.',
     })
   }
-  emit('submit-success', values)
 }
 </script>

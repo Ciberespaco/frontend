@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { formatError } from '~/lib/utils'
+import { useProductCategoryStore } from '~/stores/useProductCategoryStore'
 
 export type ProductCategory = {
   id: string
@@ -11,10 +12,13 @@ export const userProductCategory = () => {
 
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const productCategory = storeToRefs(productCategoryStore)
+  const {productCategories}  = storeToRefs(productCategoryStore)
   const fetchError = ref<string | null>(null)
 
   const fetchProductCategory = async () => {
+    if (productCategories.value) {
+      return
+    }
     loading.value = true
     fetchError.value = null
     try {
@@ -68,7 +72,7 @@ export const userProductCategory = () => {
     loading,
     error,
     fetchError,
-    productCategory,
+    productCategories,
     createProductCategory,
     fetchProductCategory,
     deleteProductCategory,

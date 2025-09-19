@@ -24,7 +24,7 @@
     <DataTable
       v-else
       :columns="columns"
-      :data="ProductCategory"
+      :data="productCategories || []"
       :on-delete="handleDelete"
     />
   </div>
@@ -36,7 +36,7 @@ import { userProductCategory, type ProductCategory } from '~/composables/useProd
 import DataTable from '../table/DataTable.vue'
 import Swal from 'sweetalert2'
 
-const { loading, fetchError, error, ProductCategory, fetchProductCategory, deleteProductCategory }
+const { loading, fetchError, error, productCategories, fetchProductCategory, deleteProductCategory }
   = userProductCategory()
 
 onMounted(() => {

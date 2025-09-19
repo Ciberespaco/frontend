@@ -51,9 +51,9 @@ watch(
 const { editProduct } = useProducts()
 const emit = defineEmits(['submit-success'])
 
-const onUpdate = (values: ProductSchema) => {
+const onUpdate = async (values: ProductSchema) => {
   try {
-    editProduct(values, props.product.id)
+    await editProduct(values, props.product.id)
     showSuccessToast('Produto alterado com sucesso!')
     emit('submit-success', values)
   }

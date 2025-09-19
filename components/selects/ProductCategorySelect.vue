@@ -6,20 +6,13 @@ import { useProductCategoryStore } from '~/stores/useProductCategoryStore'
 defineProps<FieldProps>()
 
 const productCategoryStore = useProductCategoryStore()
-const productCategories = computed(() => productCategoryStore.categories)
+const productCategories = computed(() => productCategoryStore.productCategories)
 </script>
 
 <template>
   <div>
-    <BaseSelect
-      :field-name="fieldName"
-      :config="config"
-      :required="required"
-      :disabled="disabled"
-      :options="productCategories || []"
-      option-label="name"
-      option-value="id"
-      placeholder="Selecione uma categoria..."
-    />
+    <BaseSelect :field-name="fieldName" :config="config" :required="required" :disabled="disabled"
+      :options="productCategories || []" option-label="name" option-value="id"
+      placeholder="Selecione uma categoria..." />
   </div>
 </template>

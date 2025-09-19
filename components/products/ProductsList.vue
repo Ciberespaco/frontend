@@ -19,6 +19,14 @@ onMounted(() => {
   fetchProducts()
 })
 
+defineExpose({
+  refresh,
+})
+
+async function refresh() {
+  await fetchProducts()
+}
+
 const columns: ColumnDef<Product, unknown>[] = [
   {
     accessorKey: 'product_code',

@@ -1,23 +1,23 @@
 import { defineStore } from 'pinia'
 
-interface Category {
+interface ProductCategory {
   id: string
   name: string
 }
 
 export const useProductCategoryStore = defineStore('product-categories', {
   state: (): {
-    categories: Category[] | null
+    productCategories: ProductCategory[] | null
   } => ({
-    categories: null,
+    productCategories: null,
   }),
 
   actions: {
-    setCategories(data: Category[]) {
-      this.categories = data
+    setCategories(data: ProductCategory[]) {
+      this.productCategories = data
     },
     clearCategories() {
-      this.categories = []
+      this.productCategories = []
     },
   },
 })

@@ -1,32 +1,20 @@
 <template>
   <!-- Loading state -->
-  <div
-    v-if="formLoading"
-    class="flex justify-center items-center p-8"
-  >
+  <div v-if="formLoading" class="flex justify-center items-center p-8">
     <div class="text-lg">
       Carregando opções do formulário...
     </div>
   </div>
 
   <!-- Error state -->
-  <div
-    v-else-if="loadFormError"
-    class="bg-red-50 border border-red-200 rounded p-4"
-  >
+  <div v-else-if="loadFormError" class="bg-red-50 border border-red-200 rounded p-4">
     <p class="text-red-700">
       Erro ao carregar opções do formulário: {{ loadFormError }}
     </p>
   </div>
 
   <!-- Form -->
-  <AutoForm
-    v-else
-    :schema="productSchema"
-    :field-config="fieldConfig"
-    class="space-y-4"
-    @submit="onSubmit"
-  >
+  <AutoForm v-else :schema="productSchema" :field-config="fieldConfig" class="space-y-4" @submit="onSubmit">
     <Button type="submit">
       Salvar Produto
     </Button>
@@ -40,10 +28,11 @@ import { productSchema, fieldConfig, type ProductSchema } from '~/lib/schemas/pr
 import { useProducts } from '@/composables/useProducts'
 import Swal from 'sweetalert2'
 import { useProductFormOptions } from '@/composables/useProductFormOptions'
-import { showErrorAlert } from '~/lib/swal'
+import { showErrorAlert, showSuccessToast } from '~/lib/swal'
 
 const { createProduct, error } = useProducts()
 const { loadFormOptions, loading: formLoading, error: loadFormError } = useProductFormOptions()
+const emit = defineEmits(['submit-success'])
 
 onMounted(() => {
   try {
@@ -58,7 +47,8 @@ onMounted(() => {
 const onSubmit = async (data: ProductSchema) => {
   try {
     await createProduct(data)
-    await Swal.fire('Criado!', 'O produto foi criado com sucesso.', 'success')
+    showSuccessToast('Produto criado com sucesso!')
+    emit('submit-success')
   }
   catch (err: unknown) {
     Swal.fire({
