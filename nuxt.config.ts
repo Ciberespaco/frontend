@@ -14,7 +14,6 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
 
-  // Configuração para melhor tratamento de erros
   app: {
     head: {
       charset: 'utf-8',
@@ -30,7 +29,7 @@ export default defineNuxtConfig({
   },
 
   experimental: {
-    payloadExtraction: false, // Previne alguns erros de hidratação
+    payloadExtraction: false,
   },
   compatibilityDate: '2025-05-15',
   vite: {

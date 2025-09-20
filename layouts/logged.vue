@@ -68,7 +68,10 @@
       <SidebarTrigger class="m-4 inline-block md:hidden" />
       <!-- Nuxt page outlet for the main content -->
       <div class="flex flex-col h-screen px-8 py-16">
-        <span class="flex flex-col mb-8">
+        <span
+          v-if="title || description"
+          class="flex flex-col mb-8"
+        >
           <Title>{{ title }}</Title>
           <h6 class="text-lg text-zinc-600">
             {{ description }}
@@ -105,7 +108,7 @@ const { title, description } = useHeader()
 
 const navItems = [
   { title: 'Home', route: '/', icon: House },
-  { title: 'Vendas', route: '/vendas', icon: ShoppingCart },
+  { title: 'Vendas', route: '/sales', icon: ShoppingCart },
   { title: 'Produtos', route: '/products', icon: Package },
   // { title: 'Usuários', route: '/usuarios', icon: Users }, // Comentado - rota não existe
   { title: 'Artesãos', route: '/artisans', icon: Users },

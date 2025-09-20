@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// ... seu script setup permanece o mesmo
 import { reactive } from 'vue'
 import { Input } from '@/components/ui/input'
 import {
@@ -30,19 +29,17 @@ const moneyConfig = reactive({
   >
     <FormItem v-bind="$attrs">
       <AutoFormLabel
-        v-if="!config?.label"
+        v-if="!config?.hideLabel"
         :required="required"
       >
-        {{ config?.label || fieldName }}
+        {{ config?.label }}
       </AutoFormLabel>
       <FormControl>
         <Input
           v-money="moneyConfig"
           type="text"
           placeholder="R$ 0,00"
-
           :model-value="value"
-
           @update:model-value="(newValue) => {
             const digitsOnly = String(newValue || '').replace(/\D/g, '') || '0'
             const cents = parseInt(digitsOnly, 10)

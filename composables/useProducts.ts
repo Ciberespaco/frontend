@@ -136,6 +136,27 @@ export function useProducts() {
     }
   }
 
+  const searchProductByName = async (name: string, limit = 5): Promise<Product[]> => {
+    if (!name || name.length < 2) {
+      return Promise.resolve([])
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const { data } = await axios.get<ProductListResponse>(`/products?limit=${limit}&name=${name}`)
+      return data.data
+    }
+    catch (err: unknown) {
+      error.value = formatError(err)
+      return []
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading,
     error,
@@ -150,5 +171,6 @@ export function useProducts() {
     editProduct,
     deleteProduct,
     product,
+    searchProductByName,
   }
 }

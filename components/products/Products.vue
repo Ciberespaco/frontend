@@ -11,5 +11,4 @@ const productsListComponent = ref()
 const onProductCreated = () => {
   productsListComponent.value.refresh()
 }
-
 </script>

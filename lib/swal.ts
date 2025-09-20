@@ -50,3 +50,14 @@ export const ShowCrudErrorAlert = (entityName: string, action: string, errorMess
     confirmButtonColor: '#d33',
   })
 }
+
+export const showLoadingAlert = (title = 'Carregando...') => {
+  Swal.fire({
+    title: title,
+    text: 'Por favor, aguarde um momento.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading()
+    },
+  })
+}

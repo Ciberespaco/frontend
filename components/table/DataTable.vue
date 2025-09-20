@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { computed } from 'vue'
-import { Eye, Edit, Trash2 } from 'lucide-vue-next'
+import { MoreVertical, Edit, Trash2 } from 'lucide-vue-next'
 
 interface Props {
   columns: ColumnDef<TData, TValue>[]
@@ -86,7 +86,7 @@ const table = useVueTable({
                     class="h-8 w-8 rounded-full"
                     @click="props.onView(row.original)"
                   >
-                    <Eye class="h-4 w-4" />
+                    <MoreVertical class="h-4 w-4" />
                   </Button>
                   <Button
                     v-if="props.onEdit"
