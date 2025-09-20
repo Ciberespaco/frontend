@@ -7,7 +7,7 @@ import Sales from '~/components/sales/Sales.vue'
 
 const { setHeader } = useHeader()
 
-setHeader('Vendas', 'Veja as vendaas realizadas')
+setHeader('Vendas', 'Veja as vendas realizadas')
 
 definePageMeta({ layout: 'logged' })
 </script>
