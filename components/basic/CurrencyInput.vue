@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// ... seu script setup permanece o mesmo
 import { reactive } from 'vue'
 import { Input } from '@/components/ui/input'
 import {

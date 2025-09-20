@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@pinia/nuxt',
     '@nuxtjs/google-fonts',
+    '@vueuse/nuxt',
   ],
   ssr: false,
   devtools: { enabled: true },
