@@ -12,7 +12,7 @@ export const userProductCategory = () => {
 
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const {productCategories}  = storeToRefs(productCategoryStore)
+  const { productCategories } = storeToRefs(productCategoryStore)
   const fetchError = ref<string | null>(null)
 
   const fetchProductCategory = async () => {

@@ -147,11 +147,12 @@ export function useProducts() {
     try {
       const { data } = await axios.get<ProductListResponse>(`/products?limit=${limit}&name=${name}`)
       return data.data
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       error.value = formatError(err)
-      console.error("Error searching products:", err)
       return []
-    } finally {
+    }
+    finally {
       loading.value = false
     }
   }

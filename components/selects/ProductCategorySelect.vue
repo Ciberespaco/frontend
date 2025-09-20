@@ -11,8 +11,15 @@ const productCategories = computed(() => productCategoryStore.productCategories)
 
 <template>
   <div>
-    <BaseSelect :field-name="fieldName" :config="config" :required="required" :disabled="disabled"
-      :options="productCategories || []" option-label="name" option-value="id"
-      placeholder="Selecione uma categoria..." />
+    <BaseSelect
+      :field-name="fieldName"
+      :config="config"
+      :required="required"
+      :disabled="disabled"
+      :options="productCategories || []"
+      option-label="name"
+      option-value="id"
+      placeholder="Selecione uma categoria..."
+    />
   </div>
 </template>

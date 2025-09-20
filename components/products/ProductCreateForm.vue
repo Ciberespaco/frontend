@@ -1,20 +1,32 @@
 <template>
   <!-- Loading state -->
-  <div v-if="formLoading" class="flex justify-center items-center p-8">
+  <div
+    v-if="formLoading"
+    class="flex justify-center items-center p-8"
+  >
     <div class="text-lg">
       Carregando opções do formulário...
     </div>
   </div>
 
   <!-- Error state -->
-  <div v-else-if="loadFormError" class="bg-red-50 border border-red-200 rounded p-4">
+  <div
+    v-else-if="loadFormError"
+    class="bg-red-50 border border-red-200 rounded p-4"
+  >
     <p class="text-red-700">
       Erro ao carregar opções do formulário: {{ loadFormError }}
     </p>
   </div>
 
   <!-- Form -->
-  <AutoForm v-else :schema="productSchema" :field-config="fieldConfig" class="space-y-4" @submit="onSubmit">
+  <AutoForm
+    v-else
+    :schema="productSchema"
+    :field-config="fieldConfig"
+    class="space-y-4"
+    @submit="onSubmit"
+  >
     <Button type="submit">
       Salvar Produto
     </Button>

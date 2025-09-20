@@ -1,5 +1,10 @@
 <template>
-  <AutoForm :schema="artisanSchema" :field-config="fieldConfig" class="space-y-4" @submit="onSubmit">
+  <AutoForm
+    :schema="artisanSchema"
+    :field-config="fieldConfig"
+    class="space-y-4"
+    @submit="onSubmit"
+  >
     <Button type="submit">
       Salvar Artesão
     </Button>

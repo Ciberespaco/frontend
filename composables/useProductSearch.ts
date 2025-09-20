@@ -1,69 +1,60 @@
-import { ref, watch } from 'vue';
-import type { Ref } from 'vue';
-import axios from 'axios';
+import { ref, watch } from 'vue'
+import type { Ref } from 'vue'
+import axios from 'axios'
 
 export interface ProductSearched {
-  id: string;
-  name: string;
+  id: string
+  name: string
+  quant: number
   artisan: {
-    name : string;
+    name: string
   }
-  price: number;
+  price: number
 }
 
 export interface ProductApiResponse {
-  data: Product[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  itemsPerPage: number;
+  data: ProductSearched[]
+  totalItems: number
+  totalPages: number
+  currentPage: number
+  itemsPerPage: number
 }
 
 export const useProductSearch = (searchTerm: Ref<string>) => {
-  const products = ref<Product[]>([]);
-  const pending = ref(false);
-  const error = ref<Error | null>(null);
+  const products = ref<ProductSearched[]>([])
+  const pending = ref(false)
+  const error = ref<Error | null>(null)
 
   const fetchProducts = async () => {
-    // DEBUG 4: Verificando se a função de busca é executada
-    console.log(`[DEBUG-Composable] fetchProducts called. Term: "${searchTerm.value}"`);
-
     if (!searchTerm.value) {
-      console.log('[DEBUG-Composable] Term is empty, skipping API call.');
-      products.value = [];
-      return;
+      products.value = []
+      return
     }
 
-    pending.value = true;
-    error.value = null;
+    pending.value = true
+    error.value = null
     try {
       const params = {
         limit: 10,
         status: 'ACTIVE',
         name: searchTerm.value,
-      };
+      }
 
-      // DEBUG 5: Verificando os parâmetros exatos da requisição
-      console.log('[DEBUG-Composable] Making API request with params:', params);
-
-      const response = await axios.get<ProductApiResponse>('/products', { params });
-      products.value = response.data.data;
+      const response = await axios.get<ProductApiResponse>('/products', { params })
+      products.value = response.data.data
     }
     catch (err) {
-      console.error('[DEBUG-Composable] API call failed:', err);
-      error.value = err as Error;
-      products.value = [];
+      error.value = err as Error
+      products.value = []
     }
     finally {
-      pending.value = false;
+      pending.value = false
     }
-  };
+  }
 
-  // DEBUG 3: Verificando se o watcher do composable é acionado
-  watch(searchTerm, (newValue) => {
-    console.log(`[DEBUG-Composable] Watcher triggered with: "${newValue}"`);
-    fetchProducts();
-  });
+  watch(searchTerm, () => {
+    fetchProducts()
+  })
 
-  return { data: products, pending, error };
-};
+  return { data: products, pending, error }
+}

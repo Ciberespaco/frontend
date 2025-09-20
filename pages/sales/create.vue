@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts" setup>
-import Pdv from '~/components/pdv/Pdv.vue';
+import Pdv from '~/components/pdv/Pdv.vue'
 
 const { setHeader } = useHeader()
 
-setHeader('Ponto de Venda', 'Crie novas vendas')
+setHeader('', '')
 
 definePageMeta({ layout: 'logged' })
 </script>

@@ -1,52 +1,43 @@
 <template>
-  <Card>
+  <ProductTable :items="items" />
+  <Card class="mt-6">
     <CardHeader>
-      <CardTitle class="text-center">Finalização</CardTitle>
+      <CardTitle class="text-center text-lg">
+        Finalização
+      </CardTitle>
     </CardHeader>
-    <CardContent class="space-y-3">
+    <CardContent class="space-y-3 px-8">
       <div class="flex justify-between items-center py-2 border-b">
-        <span class="font-medium">SubTotal</span>
-        <span class="font-bold">{{ formatCurrency(subtotal) }}</span>
-      </div>
-
-      <div class="flex justify-between items-center py-2 border-b">
-        <span class="font-medium">Acréscimo</span>
-        <span class="text-sm text-gray-600">{{ acrescimoPercent }}%</span>
-        <span class="font-bold">{{ formatCurrency(acrescimo) }}</span>
+        <span class="font-medium">Valor Bruto</span>
+        <span class="font-bold">{{ formatCurrency(totalBeforeDiscount / 100) }}</span>
       </div>
 
       <div class="flex justify-between items-center py-2 border-b">
         <span class="font-medium">Desconto</span>
-        <span class="text-sm text-gray-600">{{ descontoPercent }}%</span>
-        <span class="font-bold">{{ formatCurrency(desconto) }}</span>
+        <span class="font-bold text-emerald-500">- {{ formatCurrency(totalDiscount / 100) }}</span>
+      </div>
+
+      <div class="flex justify-between items-center py-2 border-b">
+        <span class="font-medium">Metodo de Pagamento</span>
+        <SelectPaymentMethod v-model="selectedPaymentMethod" />
       </div>
 
       <div class="flex justify-between items-center py-3 border-t-2 border-gray-300">
         <span class="font-bold text-lg">Total a Pagar</span>
-        <span class="font-bold text-lg">{{ formatCurrency(total) }}</span>
+        <span class="font-bold text-lg">{{ formatCurrency(total / 100) }}</span>
       </div>
     </CardContent>
   </Card>
 </template>
 
-<script setup>
-import { computed } from 'vue'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+<script setup lang="ts">
+import { usePdvStore } from '#imports'
+import { formatCurrency } from '~/lib/utils'
+import ProductTable from './ProductTable.vue'
+import Card from '../ui/card/Card.vue'
+import CardHeader from '../ui/card/CardHeader.vue'
+import SelectPaymentMethod from './SelectPaymentMethod.vue'
 
-const props = defineProps({
-  subtotal: { type: Number, default: 0 },
-  acrescimoPercent: { type: Number, default: 5 },
-  descontoPercent: { type: Number, default: 5 }
-})
-
-const acrescimo = computed(() => (props.subtotal * props.acrescimoPercent) / 100)
-const desconto = computed(() => (props.subtotal * props.descontoPercent) / 100)
-const total = computed(() => props.subtotal + acrescimo.value - desconto.value)
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(value)
-}
+const pdvStore = usePdvStore()
+const { items, total, totalDiscount, totalBeforeDiscount, selectedPaymentMethod } = storeToRefs(pdvStore)
 </script>
