@@ -86,7 +86,6 @@ export type OptionsDependency<
 > = BaseDependency<SchemaType> & {
   type: DependencyType.SETS_OPTIONS
 
-  // Partial array of values from sourceField that will trigger the dependency
   options: EnumValues
 }
 
