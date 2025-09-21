@@ -1,4 +1,3 @@
-# Sistema de Gestão - Ponto de Artes e Sabores (Frontend) 
 ## 📄 Sobre o Projeto
 Este projeto é a interface de usuário (Frontend) do sistema de gestão desenvolvido para a Associação Valadarense de Artesãos, Artistas e Gastronomia Típica – Ponto de Artes e Sabores. O objetivo principal é modernizar e automatizar as operações da associação, substituindo processos manuais e sistemas legados (como Microsoft Access) por uma solução web moderna, eficiente e centralizada.
 
