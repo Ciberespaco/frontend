@@ -34,9 +34,25 @@ export function useAuth() {
     auth.clearAuth()
   }
 
+  const forgotPassword = async (email: string): Promise<boolean> => {
+  auth.loading = true
+  auth.error = null
+
+  try {
+    await axios.post('/auth/forgot-password', { email })
+    return true
+  } catch (err: unknown) {
+    auth.error = formatError(err)
+    return false
+  } finally {
+    auth.loading = false
+  }
+}
+
   return {
     login,
     logout,
+    forgotPassword,
     user: computed(() => auth.user),
     token: computed(() => auth.token),
     loading: computed(() => auth.loading),
