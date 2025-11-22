@@ -3,7 +3,7 @@ import axios from 'axios'
 import { formatError } from '~/lib/utils'
 
 interface User {
-  id: string
+  id: number
   name: string
   email: string
 }

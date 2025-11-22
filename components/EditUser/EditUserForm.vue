@@ -3,6 +3,7 @@ import { useForm, useField } from 'vee-validate'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import swal from 'sweetalert2'
+import { showSuccessToast } from '~/lib/swal'
 import { useUpdateUser } from '@/composables/useUpdateUser'
 import {
   FormField,
@@ -15,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import Button from '@/components/ui/button/Button.vue'
 
 const props = defineProps<{
-  user: { id: string | number, name: string, email: string }
+  user: { id: number | number, name: string, email: string }
 }>()
 const emit = defineEmits<{
   updated: [{ name: string, email: string }]
@@ -60,7 +61,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     await updateUser({ name: values.name, email: values.email })
 
-    swal.fire('Sucesso', 'Dados atualizados com sucesso!', 'success')
+    showSuccessToast('Dados atualizados com sucesso!')
     emit('updated', { name: values.name, email: values.email })
   }
   catch {

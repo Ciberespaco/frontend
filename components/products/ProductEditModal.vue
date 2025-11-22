@@ -48,9 +48,12 @@ defineProps<{
   product: Product
 }>()
 
+const emit = defineEmits(['submit-success'])
+
 const isOpen = ref(false)
 
 function handleFormSuccess() {
   isOpen.value = false
+  emit('submit-success')
 }
 </script>

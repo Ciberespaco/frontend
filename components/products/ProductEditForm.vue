@@ -2,7 +2,7 @@
   <AutoForm
     v-if="props.product"
     :schema="productSchema"
-    :field-config="fieldConfig"
+    :field-config="editFieldConfig"
     :form="form"
     class="space-y-4"
     @submit="onUpdate"
@@ -35,14 +35,21 @@ watch(
   () => props.product,
   (newProduct) => {
     if (newProduct) {
+      console.log('ProductEditForm received:', newProduct)
       const formValues = {
-        ...newProduct,
+        name: newProduct.name,
+        product_code: newProduct.product_code,
+        barcode: newProduct.barcode,
+        price: newProduct.price,
+        quant: newProduct.quant,
+        description: newProduct.description ?? '',
+        obs: newProduct.obs ?? '',
         artisan_id: newProduct.artisan.id,
         raw_material_id: newProduct.raw_material.id,
         artisanal_technique_id: newProduct.artisanal_technique.id,
         product_category_id: newProduct.product_category.id,
-        price: newProduct.price,
       }
+      console.log('Setting form values:', formValues)
       form.setValues(formValues)
     }
   },
@@ -51,9 +58,24 @@ watch(
 const { editProduct } = useProducts()
 const emit = defineEmits(['submit-success'])
 
+// Override field config to disable product_code for editing
+const editFieldConfig = {
+  ...fieldConfig,
+  product_code: {
+    ...fieldConfig.product_code,
+    inputProps: {
+      ...fieldConfig.product_code?.inputProps,
+      disabled: true,
+    },
+  },
+}
+
 const onUpdate = async (values: ProductSchema) => {
   try {
-    await editProduct(values, props.product.id)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { product_code, ...updatePayload } = values
+    // @ts-expect-error updatePayload matches the schema minus product_code
+    await editProduct(updatePayload, props.product.id)
     showSuccessToast('Produto alterado com sucesso!')
     emit('submit-success', values)
   }

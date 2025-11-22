@@ -1,10 +1,8 @@
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button
-        variant="outline"
-        class="mb-4"
-      >
+      <Button class="mb-4 cursor-pointer">
+        <Plus class="w-4 h-4 mr-2" />
         Cadastrar Novo Produto
       </Button>
     </DialogTrigger>
@@ -16,13 +14,17 @@
         </DialogDescription>
       </DialogHeader>
       <div class="grid gap-4 py-4 overflow-y-auto max-h-[70vh] pr-6">
-        <ProductCreateForm @submit-success="handleFormSuccess" />
+        <ProductCreateForm
+          ref="formRef"
+          @submit-success="handleFormSuccess"
+        />
       </div>
     </DialogContent>
   </Dialog>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -32,14 +34,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Plus } from 'lucide-vue-next'
 import ProductCreateForm from './ProductCreateForm.vue'
 
 const emit = defineEmits(['submit-success'])
 
 const isOpen = ref(false)
+const formRef = ref<{ loadFormOptions: () => void } | null>(null)
 
-function handleFormSuccess() {
+const handleFormSuccess = () => {
   isOpen.value = false
   emit('submit-success')
 }
+
+const reloadFormOptions = () => {
+  formRef.value?.loadFormOptions()
+}
+
+defineExpose({
+  reloadFormOptions,
+})
 </script>

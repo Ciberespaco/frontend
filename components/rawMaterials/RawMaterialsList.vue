@@ -25,18 +25,21 @@
       v-else
       :columns="columns"
       :data="rawMaterials || []"
-      :on-delete="handleDelete"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { onMounted, h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
-import { useRawMaterials } from '~/composables/useRawMaterials'
+import { useRawMaterials, type RawMaterial } from '~/composables/useRawMaterials'
 import DataTable from '../table/DataTable.vue'
-import Swal from 'sweetalert2'
+import RawMaterialsEditModal from './RawMaterialsEditModal.vue'
+import Button from '../ui/button/Button.vue'
+import { Trash2 } from 'lucide-vue-next'
+import { showConfirmDialog, showSuccessToast, ShowCrudErrorAlert } from '~/lib/swal'
 
-const { loading, fetchError, error, rawMaterials, fetchRawMaterials, deleteRawMaterial }
+const { loading, fetchError, rawMaterials, fetchRawMaterials, deleteRawMaterial }
   = useRawMaterials()
 
 onMounted(() => {
@@ -52,36 +55,23 @@ async function refresh() {
 }
 
 const handleDelete = async (rawMaterial: RawMaterial) => {
-  const result = await Swal.fire({
+  const result = await showConfirmDialog({
     title: 'Você tem certeza?',
     text: 'Esta ação não pode ser desfeita!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#6c757d',
     confirmButtonText: 'Sim, pode deletar!',
-    cancelButtonText: 'Cancelar',
   })
-  if (!result.isConfirmed) {
+
+  if (!result) {
     return
   }
 
   try {
     await deleteRawMaterial(rawMaterial.id)
-    await Swal.fire({
-      title: 'Deletado!',
-      text: `Material com ID "${rawMaterial.id}" deletado!`,
-      icon: 'success',
-    })
+    showSuccessToast('Material excluído com sucesso!')
+    fetchRawMaterials()
   }
   catch (err: unknown) {
-    Swal.fire({
-      title: 'Erro!',
-      text: error.value || (err as Error).message || 'Erro desconhecido',
-      icon: 'error',
-    }).finally(() => {
-      refresh()
-    })
+    ShowCrudErrorAlert('material', 'excluir', String(err))
   }
 }
 
@@ -95,6 +85,23 @@ const columns: ColumnDef<RawMaterial, unknown>[] = [
     accessorKey: 'name',
     header: 'Nome',
     cell: ({ row }) => row.getValue('name'),
+  },
+  {
+    id: 'material-actions',
+    header: 'Ações',
+    cell: ({ row }) => {
+      return h('div', { class: 'flex gap-2' }, [
+        h(RawMaterialsEditModal, {
+          rawMaterial: row.original,
+          onSubmitSuccess: refresh,
+        }),
+        h(Button, {
+          variant: 'ghost',
+          size: 'icon',
+          onClick: () => handleDelete(row.original),
+        }, () => h(Trash2, { class: 'w-4 h-4 text-red-500' })),
+      ])
+    },
   },
 ]
 </script>

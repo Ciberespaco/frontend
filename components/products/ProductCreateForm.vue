@@ -38,9 +38,8 @@ import AutoForm from '../ui/auto-form/AutoForm.vue'
 import { Button } from '@/components/ui/button'
 import { productSchema, fieldConfig, type ProductSchema } from '~/lib/schemas/product.schema'
 import { useProducts } from '@/composables/useProducts'
-import Swal from 'sweetalert2'
 import { useProductFormOptions } from '@/composables/useProductFormOptions'
-import { showErrorAlert, showSuccessToast } from '~/lib/swal'
+import { showErrorAlert, showSuccessToast, ShowCrudErrorAlert } from '~/lib/swal'
 
 const { createProduct, error } = useProducts()
 const { loadFormOptions, loading: formLoading, error: loadFormError } = useProductFormOptions()
@@ -56,6 +55,10 @@ onMounted(() => {
   }
 })
 
+defineExpose({
+  loadFormOptions,
+})
+
 const onSubmit = async (data: ProductSchema) => {
   try {
     await createProduct(data)
@@ -63,11 +66,7 @@ const onSubmit = async (data: ProductSchema) => {
     emit('submit-success')
   }
   catch (err: unknown) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Erro ao criar',
-      text: error.value || String(err) || 'Ocorreu um erro inesperado.',
-    })
+    ShowCrudErrorAlert('produto', 'criar', error.value || String(err))
   }
 }
 </script>

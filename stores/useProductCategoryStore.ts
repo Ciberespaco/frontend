@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 interface ProductCategory {
-  id: string
+  id: number
   name: string
 }
 

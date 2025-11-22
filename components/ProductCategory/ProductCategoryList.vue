@@ -25,18 +25,21 @@
       v-else
       :columns="columns"
       :data="productCategories || []"
-      :on-delete="handleDelete"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { onMounted, h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { userProductCategory, type ProductCategory } from '~/composables/useProductCategory'
 import DataTable from '../table/DataTable.vue'
-import Swal from 'sweetalert2'
+import ProductCategoryEditModal from './ProductCategoryEditModal.vue'
+import Button from '../ui/button/Button.vue'
+import { Trash2 } from 'lucide-vue-next'
+import { showConfirmDialog, showSuccessToast, ShowCrudErrorAlert } from '~/lib/swal'
 
-const { loading, fetchError, error, productCategories, fetchProductCategory, deleteProductCategory }
+const { loading, fetchError, productCategories, fetchProductCategory, deleteProductCategory }
   = userProductCategory()
 
 onMounted(() => {
@@ -52,36 +55,23 @@ async function refresh() {
 }
 
 const handleDelete = async (ProductCategory: ProductCategory) => {
-  const result = await Swal.fire({
+  const result = await showConfirmDialog({
     title: 'Você tem certeza?',
     text: 'Esta ação não pode ser desfeita!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#6c757d',
     confirmButtonText: 'Sim, pode deletar!',
-    cancelButtonText: 'Cancelar',
   })
-  if (!result.isConfirmed) {
+
+  if (!result) {
     return
   }
 
   try {
     await deleteProductCategory(ProductCategory.id)
-    await Swal.fire({
-      title: 'Deletado!',
-      text: `Material com ID "${ProductCategory.id}" deletado!`,
-      icon: 'success',
-    })
+    showSuccessToast('Categoria excluída com sucesso!')
+    fetchProductCategory()
   }
   catch (err: unknown) {
-    Swal.fire({
-      title: 'Erro!',
-      text: error.value || (err as Error).message || 'Erro desconhecido',
-      icon: 'error',
-    }).finally(() => {
-      refresh()
-    })
+    ShowCrudErrorAlert('categoria', 'excluir', String(err))
   }
 }
 
@@ -95,6 +85,23 @@ const columns: ColumnDef<ProductCategory, unknown>[] = [
     accessorKey: 'name',
     header: 'Nome',
     cell: ({ row }) => row.getValue('name'),
+  },
+  {
+    id: 'category-actions',
+    header: 'Ações',
+    cell: ({ row }) => {
+      return h('div', { class: 'flex gap-2' }, [
+        h(ProductCategoryEditModal, {
+          productCategory: row.original,
+          onSubmitSuccess: refresh,
+        }),
+        h(Button, {
+          variant: 'ghost',
+          size: 'icon',
+          onClick: () => handleDelete(row.original),
+        }, () => h(Trash2, { class: 'w-4 h-4 text-red-500' })),
+      ])
+    },
   },
 ]
 </script>

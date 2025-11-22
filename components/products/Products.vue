@@ -1,14 +1,30 @@
 <template>
-  <ProductsProductCreateFormModal @submit-success="onProductCreated" />
-  <ProductsList ref="productsListComponent" />
+  <div class="space-y-4">
+    <ProductCreateFormModal
+      ref="productModalRef"
+      @submit-success="handleUpdate"
+    />
+
+    <ProductsList :key="refreshKey" />
+  </div>
 </template>
 
 <script lang="ts" setup>
-import ProductsList from './ProductsList.vue'
+import { ref } from 'vue'
+import type ProductCreateFormModal from './ProductCreateFormModal.vue'
 
-const productsListComponent = ref()
+const refreshKey = ref(0)
+const productModalRef = ref<InstanceType<typeof ProductCreateFormModal> | null>(null)
 
-const onProductCreated = () => {
-  productsListComponent.value.refresh()
+const handleUpdate = () => {
+  refreshKey.value++
 }
+
+// Expose method for child modals to call when they create a new option
+const reloadProductFormOptions = () => {
+  productModalRef.value?.reloadFormOptions()
+}
+
+// Make it available globally via provide/inject
+provide('reloadProductFormOptions', reloadProductFormOptions)
 </script>

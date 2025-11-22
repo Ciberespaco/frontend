@@ -1,29 +1,28 @@
 <template>
-  <Dialog v-model:open="isOpen">
+  <Dialog
+    :open="open"
+    @update:open="setOpen"
+  >
     <DialogTrigger as-child>
-      <Button
-        variant="outline"
-        class="mb-4"
-      >
-        Cadastrar Novo Material
+      <Button>
+        <Plus class="w-4 h-4 mr-2" />
+        Nova Matéria-prima
       </Button>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-[625px]">
+    <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Cadastrar Material</DialogTitle>
+        <DialogTitle>Cadastrar Matéria-prima</DialogTitle>
         <DialogDescription>
-          Preencha os campos abaixo para adicionar um novo material ao sistema.
+          Preencha os dados abaixo para cadastrar uma nova matéria-prima.
         </DialogDescription>
       </DialogHeader>
-      <div class="grid gap-4 py-4 overflow-y-auto max-h-[70vh] pr-6">
-        <RawMaterialsCreateForm @submit-success="onFormSubmitSuccess" />
-      </div>
+      <RawMaterialsCreateForm @submit-success="onSuccess" />
     </DialogContent>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
+import { ref } from 'vue'
 import {
   Dialog,
   DialogContent,
@@ -32,14 +31,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-vue-next'
 import RawMaterialsCreateForm from './RawMaterialsCreateForm.vue'
 
+const open = ref(false)
 const emit = defineEmits(['submit-success'])
 
-const isOpen = ref(false)
+const setOpen = (value: boolean) => {
+  open.value = value
+}
 
-const onFormSubmitSuccess = () => {
-  isOpen.value = false
+const onSuccess = () => {
+  setOpen(false)
   emit('submit-success')
 }
 </script>

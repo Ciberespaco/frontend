@@ -14,29 +14,21 @@
 <script lang="ts" setup>
 import { fieldConfig, ProductcategorySchema, type ProductCategorySchema } from '@/lib/schemas/product-category.schema'
 import { userProductCategory } from '~/composables/useProductCategory'
-import Swal from 'sweetalert2'
 import AutoForm from '../ui/auto-form/AutoForm.vue'
 import Button from '../ui/button/Button.vue'
+import { showSuccessToast, ShowCrudErrorAlert } from '~/lib/swal'
 
-const { createProductCategory, error } = userProductCategory()
+const { createProductCategory } = userProductCategory()
 
 const emit = defineEmits(['submit-success'])
 const onSubmit = async (values: ProductCategorySchema) => {
   try {
     await createProductCategory(values)
-    Swal.fire({
-      icon: 'success',
-      title: 'Criado!',
-      text: 'A categoria foi criado com sucesso.',
-    })
+    showSuccessToast('Categoria criada com sucesso!')
     emit('submit-success')
   }
   catch (err: unknown) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Erro ao criar',
-      text: error.value || String(err) || 'Ocorreu um erro inesperado.',
-    })
+    ShowCrudErrorAlert('categoria', 'criar', String(err))
   }
 }
 </script>

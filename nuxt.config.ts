@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
@@ -12,6 +11,14 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
   ],
   ssr: false,
+
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+      ignore: ['**/*.ts'],
+    },
+  ],
   devtools: { enabled: true },
 
   app: {

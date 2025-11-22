@@ -17,7 +17,7 @@
         <span class="font-bold text-emerald-500">- {{ formatCurrency(totalDiscount / 100) }}</span>
       </div>
 
-      <div class="flex justify-between items-center py-2 border-b">
+      <div class="flex justify-between items-center py-2">
         <span class="font-medium">Metodo de Pagamento</span>
         <SelectPaymentMethod v-model="selectedPaymentMethod" />
       </div>

@@ -8,7 +8,7 @@ export function useChangePassword() {
   const authStore = useAuthStore()
 
   const changePassword = async (
-    userId: string | number,
+    userid: number | number,
     passwords: {
       oldPassword: string
       newPassword: string

@@ -3,26 +3,29 @@
     <Table>
       <TableHeader>
         <TableRow class="bg-gray-50">
-          <TableHead class="text-center">
+          <TableHead>
             Código do Produto
           </TableHead>
-          <TableHead class="text-center">
+          <TableHead>
             Produto
           </TableHead>
-          <TableHead class="text-center">
+          <TableHead>
             Quantidade
           </TableHead>
-          <TableHead class="text-center">
+          <TableHead>
             Valor unitário
           </TableHead>
-          <TableHead class="text-center">
+          <TableHead>
             Artesão
           </TableHead>
-          <TableHead class="text-center">
+          <TableHead>
             Desconto
           </TableHead>
-          <TableHead class="text-center">
+          <TableHead>
             SubTotal
+          </TableHead>
+          <TableHead class="text-center">
+            Ações
           </TableHead>
         </TableRow>
       </TableHeader>
@@ -32,26 +35,36 @@
           :key="item.id"
           class="hover:bg-gray-50"
         >
-          <TableCell class="text-center">
+          <TableCell>
             {{ item.codigo }}
           </TableCell>
-          <TableCell class="text-center">
+          <TableCell>
             {{ item.produto }}
           </TableCell>
-          <TableCell class="text-center">
+          <TableCell>
             {{ item.quantidade }}
           </TableCell>
-          <TableCell class="text-center">
+          <TableCell>
             {{ formatCurrency(item.valorUnitario / 100) }}
           </TableCell>
-          <TableCell class="text-center">
+          <TableCell>
             {{ item.artesao?.name }}
           </TableCell>
-          <TableCell class="text-center">
+          <TableCell>
             {{ formatCurrency(item.desconto / 100) }}
           </TableCell>
-          <TableCell class="text-center">
+          <TableCell>
             {{ formatCurrency(item.subtotal / 100) }}
+          </TableCell>
+          <TableCell class="text-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="() => removeItem(item.id)"
+              class="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 class="h-4 w-4" />
+            </Button>
           </TableCell>
         </TableRow>
       </TableBody>
@@ -68,7 +81,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Trash2 } from 'lucide-vue-next'
 import { formatCurrency } from '~/lib/utils'
+import { usePdvStore } from '#imports'
 
 defineProps({
   items: {
@@ -76,4 +92,10 @@ defineProps({
     default: () => [],
   },
 })
+
+const pdvStore = usePdvStore()
+
+const removeItem = (itemId) => {
+  pdvStore.removeItem(itemId)
+}
 </script>

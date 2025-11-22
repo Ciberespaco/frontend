@@ -24,18 +24,21 @@
       v-else
       :columns="columns"
       :data="artisanTechniques || []"
-      :on-delete="handleDelete"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { onMounted, h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { useArtisanTechniques, type ArtisanTechnique } from '~/composables/useArtisanTechniques'
 import DataTable from '../table/DataTable.vue'
-import Swal from 'sweetalert2'
+import ArtisanTechniquesEditModal from './ArtisanTechniquesEditModal.vue'
+import Button from '../ui/button/Button.vue'
+import { Trash2 } from 'lucide-vue-next'
+import { showConfirmDialog, showSuccessToast, ShowCrudErrorAlert } from '~/lib/swal'
 
-const { loading, fetchError, error, artisanTechniques, fetchArtisanTechniques, deleteArtisanTechnique } = useArtisanTechniques()
+const { loading, fetchError, artisanTechniques, fetchArtisanTechniques, deleteArtisanTechnique } = useArtisanTechniques()
 
 onMounted(() => {
   fetchArtisanTechniques()
@@ -50,37 +53,23 @@ async function refresh() {
 }
 
 const handleDelete = async (artisanTechnique: ArtisanTechnique) => {
-  const result = await Swal.fire({
+  const result = await showConfirmDialog({
     title: 'Você tem certeza?',
     text: 'Esta ação não pode ser desfeita!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#6c757d',
     confirmButtonText: 'Sim, pode deletar!',
-    cancelButtonText: 'Cancelar',
   })
 
-  if (!result.isConfirmed) {
+  if (!result) {
     return
   }
 
   try {
     await deleteArtisanTechnique(artisanTechnique.id)
-    await Swal.fire({
-      title: 'Deletado!',
-      text: `Técnica com ID "${artisanTechnique.id}" deletada!`,
-      icon: 'success',
-    })
+    showSuccessToast('Técnica excluída com sucesso!')
+    fetchArtisanTechniques()
   }
   catch (err: unknown) {
-    Swal.fire({
-      title: 'Erro!',
-      text: error.value || (err as Error).message || 'Erro desconhecido',
-      icon: 'error',
-    }).finally(() => {
-      refresh()
-    })
+    ShowCrudErrorAlert('técnica artesanal', 'excluir', String(err))
   }
 }
 
@@ -94,6 +83,23 @@ const columns: ColumnDef<ArtisanTechnique, unknown>[] = [
     accessorKey: 'name',
     header: 'Nome',
     cell: ({ row }) => row.getValue('name'),
+  },
+  {
+    id: 'artisan-actions',
+    header: 'Ações',
+    cell: ({ row }) => {
+      return h('div', { class: 'flex gap-2' }, [
+        h(ArtisanTechniquesEditModal, {
+          artisanTechnique: row.original,
+          onSubmitSuccess: refresh,
+        }),
+        h(Button, {
+          variant: 'ghost',
+          size: 'icon',
+          onClick: () => handleDelete(row.original),
+        }, () => h(Trash2, { class: 'w-4 h-4 text-red-500' })),
+      ])
+    },
   },
 ]
 </script>

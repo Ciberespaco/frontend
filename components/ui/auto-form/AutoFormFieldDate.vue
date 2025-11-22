@@ -19,7 +19,7 @@ const df = new DateFormatter('en-US', {
 </script>
 
 <template>
-  <FormField v-slot="slotProps" :name="fieldName">
+  <FormField v-slot="slotProps" :name="fieldName" :validate-on-blur="false">
     <FormItem>
       <AutoFormLabel v-if="!config?.hideLabel" :required="required">
         {{ config?.label || beautifyObjectName(label ?? fieldName) }}

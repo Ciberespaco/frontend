@@ -3,7 +3,7 @@ import { formatError } from '~/lib/utils'
 import { useProductCategoryStore } from '~/stores/useProductCategoryStore'
 
 export type ProductCategory = {
-  id: string
+  id: number
   name: string
 }
 
@@ -16,9 +16,6 @@ export const userProductCategory = () => {
   const fetchError = ref<string | null>(null)
 
   const fetchProductCategory = async () => {
-    if (productCategories.value) {
-      return
-    }
     loading.value = true
     fetchError.value = null
     try {
@@ -51,7 +48,24 @@ export const userProductCategory = () => {
     }
   }
 
-  const deleteProductCategory = async (id: string) => {
+  const updateProductCategory = async (id: number, data: Omit<ProductCategory, 'id'>) => {
+    loading.value = true
+    error.value = null
+    try {
+      await axios.patch(`/product-category/${id}`, data)
+      productCategoryStore.clearCategories()
+      await fetchProductCategory()
+    }
+    catch (err: unknown) {
+      error.value = formatError(err)
+      throw err
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  const deleteProductCategory = async (id: number) => {
     loading.value = true
     error.value = null
     try {
@@ -75,6 +89,7 @@ export const userProductCategory = () => {
     productCategories,
     createProductCategory,
     fetchProductCategory,
+    updateProductCategory,
     deleteProductCategory,
   }
 }

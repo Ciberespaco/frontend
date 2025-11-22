@@ -5,6 +5,13 @@ import { formatCpf, formatDate } from '~/lib/utils'
 import { useArtisans, type Artisan } from '~/composables/useArtisans'
 import { onMounted } from 'vue'
 
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { XCircle, CheckCircle, Pencil } from 'lucide-vue-next'
+import { h } from 'vue'
+import ArtisanEditModal from './ArtisanEditModal.vue'
+import { showConfirmDialog, showSuccessToast, ShowCrudErrorAlert } from '~/lib/swal'
+
 const {
   artisans,
   loading,
@@ -13,17 +20,56 @@ const {
   currentPage,
   totalPages,
   fetchArtisans,
+  deleteArtisan,
+  activateArtisan,
 } = useArtisans()
 
 onMounted(() => {
-  fetchArtisans()
+  // Fetch all artisans (active and inactive)
+  fetchArtisans(1, 10, undefined)
 })
+
 defineExpose({
   refresh,
 })
 
 async function refresh() {
-  await fetchArtisans()
+  await fetchArtisans(currentPage.value, 10, undefined)
+}
+
+const handleDeactivate = async (artisan: Artisan) => {
+  const result = await showConfirmDialog({
+    title: 'Desativar Artesão?',
+    text: 'O artesão será desativado e seus produtos ficarão indisponíveis.',
+    confirmButtonText: 'Sim, desativar!',
+  })
+
+  if (!result) return
+
+  try {
+    await deleteArtisan(artisan.id)
+    showSuccessToast('Artesão desativado com sucesso!')
+  } catch (err: unknown) {
+    ShowCrudErrorAlert('artesão', 'desativar', String(err))
+  }
+}
+
+const handleActivate = async (artisan: Artisan) => {
+  const result = await showConfirmDialog({
+    title: 'Ativar Artesão?',
+    text: 'O artesão será reativado.',
+    confirmButtonText: 'Sim, ativar!',
+    confirmButtonColor: '#16a34a',
+  })
+
+  if (!result) return
+
+  try {
+    await activateArtisan(artisan.id)
+    showSuccessToast('Artesão ativado com sucesso!')
+  } catch (err: unknown) {
+    ShowCrudErrorAlert('artesão', 'ativar', String(err))
+  }
 }
 
 const columns: ColumnDef<Artisan, unknown>[] = [
@@ -43,14 +89,21 @@ const columns: ColumnDef<Artisan, unknown>[] = [
     cell: ({ row }) => row.getValue('municipal_seal'),
   },
   {
+    accessorKey: 'isActive',
+    header: 'Situação',
+    cell: ({ row }) => {
+      const isActive = row.getValue('isActive')
+      return h(Badge, {
+        class: isActive 
+          ? 'bg-green-500 hover:bg-green-600 text-white' 
+          : 'bg-red-500 hover:bg-red-600 text-white',
+      }, () => isActive ? 'Ativo' : 'Desativado')
+    },
+  },
+  {
     accessorKey: 'sex',
     header: 'Sexo',
     cell: ({ row }) => (row.getValue('sex') === 'F' ? 'Feminino' : 'Masculino'),
-  },
-  {
-    accessorKey: 'birthdate',
-    header: 'Data de Nascimento',
-    cell: ({ row }) => formatDate(row.getValue('birthdate')),
   },
   {
     accessorKey: 'localidade',
@@ -58,20 +111,32 @@ const columns: ColumnDef<Artisan, unknown>[] = [
     cell: ({ row }) => `${row.getValue('localidade')}/${row.original.uf}`,
   },
   {
-    accessorKey: 'artisan_register_date',
-    header: 'Data de Registro',
-    cell: ({ row }) => formatDate(row.getValue('artisan_register_date')),
+    id: 'artisan-actions',
+    header: 'Ações',
+    cell: ({ row }) => {
+      const artisan = row.original
+      return h('div', { class: 'flex gap-2' }, [
+        h(ArtisanEditModal, {
+          artisan: artisan,
+          onSubmitSuccess: refresh,
+        }),
+        h(Button, {
+          variant: 'ghost',
+          size: 'icon',
+          onClick: () => artisan.isActive ? handleDeactivate(artisan) : handleActivate(artisan),
+          title: artisan.isActive ? 'Desativar' : 'Ativar'
+        }, () => artisan.isActive 
+          ? h(XCircle, { class: 'w-4 h-4 text-red-500' }) 
+          : h(CheckCircle, { class: 'w-4 h-4 text-green-500' })
+        ),
+      ])
+    },
   },
 ]
-
-const handleView = (artisan: Artisan) => {
-  useRouter().push('/artisans/' + artisan.id)
-}
 </script>
 
 <template>
   <div class="space-y-4">
-    <!-- Loading state -->
     <div
       v-if="loading"
       class="flex justify-center p-8"
@@ -81,7 +146,6 @@ const handleView = (artisan: Artisan) => {
       </div>
     </div>
 
-    <!-- Error state -->
     <div
       v-else-if="error"
       class="bg-red-50 border border-red-200 rounded p-4"
@@ -91,15 +155,12 @@ const handleView = (artisan: Artisan) => {
       </p>
     </div>
 
-    <!-- Data table -->
     <DataTable
       v-else
       :columns="columns"
       :data="artisans"
-      :on-view="handleView"
     />
 
-    <!-- Pagination info -->
     <div
       v-if="!loading && !error"
       class="text-sm text-gray-500"

@@ -6,7 +6,7 @@ import { useArtisansStore } from '#imports'
 defineProps<FieldProps>()
 
 const artisansStore = useArtisansStore()
-const artisans = computed(() => artisansStore.artisans)
+const artisans = computed(() => artisansStore.artisans?.filter(a => a.isActive) || [])
 </script>
 
 <template>

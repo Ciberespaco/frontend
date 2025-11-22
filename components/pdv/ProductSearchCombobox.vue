@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue'
-import { Check, ChevronsUpDown } from 'lucide-vue-next'
+import { ref, watch, onUnmounted, nextTick } from 'vue'
+import { ChevronsUpDown } from 'lucide-vue-next'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import type { FieldProps } from '@/components/ui/auto-form/interface'
 import { cn } from '@/lib/utils'
@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useProductSearch, type ProductSearched } from '~/composables/useProductSearch'
 import AutoFormLabel from '@/components/ui/auto-form/AutoFormLabel.vue'
 
-defineProps<FieldProps>()
+const props = defineProps<FieldProps & { initialSearch?: string }>()
 
 const open = ref(false)
 const searchTerm = ref('')
@@ -23,6 +23,32 @@ let timeout: NodeJS.Timeout | null = null
 onUnmounted(() => {
   if (timeout) clearTimeout(timeout)
 })
+
+// Watch for initial search prop
+watch(() => props.initialSearch, (newValue) => {
+  if (newValue) {
+    searchTerm.value = newValue
+    open.value = true
+    
+    // Focus on the input after the popover opens
+    // Use setTimeout to give the popover time to render
+    const focusInput = (attempts = 0) => {
+      setTimeout(() => {
+        const input = document.querySelector('[cmdk-input]') as HTMLInputElement
+        if (input) {
+          input.focus()
+          // Set cursor at the end of the text
+          input.setSelectionRange(newValue.length, newValue.length)
+        } else if (attempts < 5) {
+          // Retry if input not found yet (max 5 attempts)
+          focusInput(attempts + 1)
+        }
+      }, 50 * (attempts + 1)) // Increase delay with each attempt
+    }
+    
+    focusInput()
+  }
+}, { immediate: true })
 
 watch(searchTerm, (newValue) => {
   if (timeout) clearTimeout(timeout)
@@ -80,7 +106,7 @@ function handleSelect(componentField: any, product: ProductSearched) {
               placeholder="Buscar produto..."
             />
             <CommandList>
-              <CommandEmpty>
+              <CommandEmpty class="py-3 text-muted-foreground text-sm">
                 <span v-if="pending">Buscando...</span>
                 <span v-else>Nenhum produto encontrado.</span>
               </CommandEmpty>
@@ -91,12 +117,6 @@ function handleSelect(componentField: any, product: ProductSearched) {
                   :value="product.name"
                   @select="() => handleSelect(componentField, product)"
                 >
-                  <Check
-                    :class="cn(
-                      'mr-2 h-4 w-4',
-                      value?.id === product.id ? 'opacity-100' : 'opacity-0',
-                    )"
-                  />
                   {{ product.name }}
                 </CommandItem>
               </CommandGroup>

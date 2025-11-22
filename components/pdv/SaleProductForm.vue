@@ -1,32 +1,35 @@
 <template>
-  <InfoCard
-    title="Adicionar Produto"
-    :icon="Package"
+  <AutoForm
+    :schema="SaleItemSchema"
+    :field-config="fieldConfig"
+    class="space-y-4"
+    @submit="onSubmit"
   >
-    <AutoForm
-      :schema="SaleItemSchema"
-      :field-config="saleItemFieldConfig"
-      class="space-y-4"
-      @submit="onSubmit"
-    >
-      <Button type="submit">
-        Adicionar Produto
-      </Button>
-    </AutoForm>
-  </InfoCard>
+    <Button type="submit">
+      Adicionar
+    </Button>
+  </AutoForm>
 </template>
 
 <script lang="ts" setup>
-import { SaleItemSchema, saleItemFieldConfig } from '~/lib/schemas/create-sale.schema'
+import { SaleItemSchema, createSaleItemFieldConfig } from '~/lib/schemas/create-sale.schema'
 import { usePdvStore } from '#imports'
 import AutoForm from '../ui/auto-form/AutoForm.vue'
 import Button from '../ui/button/Button.vue'
 import type z from 'zod'
-import InfoCard from '../InfoCard/InfoCard.vue'
-import { Package } from 'lucide-vue-next'
 import { showErrorAlert } from '~/lib/swal'
+import { computed } from 'vue'
+
+const props = defineProps<{
+  initialSearch?: string
+}>()
+
+const emit = defineEmits(['submit-success'])
 
 const pdvStore = usePdvStore()
+
+// Create field config dynamically based on initialSearch
+const fieldConfig = computed(() => createSaleItemFieldConfig(props.initialSearch))
 
 const onSubmit = (data: z
   .infer<typeof SaleItemSchema>) => {
@@ -40,6 +43,7 @@ const onSubmit = (data: z
   }
 
   pdvStore.addItem(data)
+  emit('submit-success')
 }
 
 const validateProductStock = (data: z

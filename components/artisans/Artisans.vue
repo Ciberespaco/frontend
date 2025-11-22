@@ -1,17 +1,16 @@
 <template>
-  <ArtisanFormModal @submit-success="onArtisanCreated" />
-  <ArtisansList ref="artisansListComponent" />
+  <div class="space-y-4">
+    <ArtisanFormModal @submit-success="handleUpdate" />
+    <ArtisansList :key="refreshKey" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import ArtisansList from './ArtisansList.vue'
-import ArtisanFormModal from './ArtisanFormModal.vue'
+import { ref } from 'vue'
 
-const artisansListComponent = ref()
+const refreshKey = ref(0)
 
-const onArtisanCreated = () => {
-  if (artisansListComponent.value?.refresh) {
-    artisansListComponent.value.refresh()
-  }
+const handleUpdate = () => {
+  refreshKey.value++
 }
 </script>

@@ -3,6 +3,7 @@
     <ProductEditModal
       v-if="product"
       :product="product"
+      @submit-success="handleProductUpdated"
     />
     <Button
       variant="destructive"
@@ -23,6 +24,27 @@
       <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
       <span class="text-gray-600">Carregando...</span>
     </div>
+  </div>
+
+  <div
+    v-else-if="error"
+    class="flex flex-col items-center justify-center py-12"
+  >
+    <div class="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-4">
+      <AlertCircle class="h-12 w-12 text-red-500" />
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">
+      Ocorreu um erro ao carregar o produto
+    </h3>
+    <p class="text-red-600 mb-4 text-center max-w-md">
+      {{ error }}
+    </p>
+    <Button
+      variant="outline"
+      @click="retryFetch"
+    >
+      Tentar Novamente
+    </Button>
   </div>
 
   <div
@@ -63,7 +85,7 @@
     >
       <InfoItem
         label="Preço"
-        :value="formatCurrency(product.price / 100)"
+        :value="formatCurrency(Number(product.price) / 100)"
       />
       <InfoItem
         label="Quantidade em Estoque"
@@ -77,15 +99,15 @@
     >
       <InfoItem
         label="Categoria"
-        :value="product.product_category.name"
+        :value="product.product_category?.name || 'N/A'"
       />
       <InfoItem
         label="Matéria-Prima"
-        :value="product.raw_material.name"
+        :value="product.raw_material?.name || 'N/A'"
       />
       <InfoItem
         label="Técnica Artesanal"
-        :value="product.artisanal_technique.name"
+        :value="product.artisanal_technique?.name || 'N/A'"
       />
     </InfoCard>
 
@@ -95,20 +117,20 @@
     >
       <InfoItem
         label="Id"
-        :value="product.artisan.id"
+        :value="String(product.artisan?.id || 'N/A')"
         mono
       />
       <InfoItem
         label="Nome"
-        :value="product.artisan.name"
+        :value="product.artisan?.name || 'N/A'"
       />
       <InfoItem
-        label="cpf"
-        :value="formatCpf(product.artisan.cpf)"
+        label="CPF"
+        :value="product.artisan?.cpf ? formatCpf(product.artisan.cpf) : 'N/A'"
       />
       <InfoItem
-        label="selo municipal"
-        :value="product.artisan.municipal_seal"
+        label="Selo Municipal"
+        :value="product.artisan?.municipal_seal || 'N/A'"
       />
     </InfoCard>
 
@@ -126,7 +148,10 @@
       />
     </InfoCard>
 
-    <Card v-if="product.obs">
+    <Card
+      v-if="product.obs"
+      class="mb-8"
+    >
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
           <MessageSquare class="h-5 w-5" />
@@ -172,16 +197,16 @@ import {
   Tags,
   CircleDollarSign,
 } from 'lucide-vue-next'
-import { formatCpf, formatDateTime, formatCurrency } from '~/lib/utils' // Adicione formatCurrency
+import { formatCpf, formatDateTime, formatCurrency } from '~/lib/utils'
 import InfoCard from '../InfoCard/InfoCard.vue'
 import InfoItem from '../InfoCard/InfoItem.vue'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useProductFormOptions } from '@/composables/useProductFormOptions'
-import { showConfirmDialog, ShowCrudErrorAlert, showErrorAlert, showSuccessToast } from '~/lib/swal'
+import { showConfirmDialog, ShowCrudErrorAlert, showSuccessToast } from '~/lib/swal'
 import ProductEditModal from './ProductEditModal.vue'
 
-const { loadFormOptions, error: loadFormError } = useProductFormOptions()
+const { loadFormOptions } = useProductFormOptions()
 
 defineProps<{
   emptyMessage?: string
@@ -190,24 +215,33 @@ defineProps<{
 const route = useRoute()
 const router = useRouter()
 
-const { product, loading, fetchProduct, deleteProduct } = useProducts()
+const { product, loading, error, fetchProduct, deleteProduct } = useProducts()
 
-onMounted(() => {
-  const productId = route.params.id as string
+// Função auxiliar para obter o ID numérico da rota
+const getProductId = (): number | null => {
+  const idParam = route.params.id
+  const id = Number(idParam)
+  return !isNaN(id) && id > 0 ? id : null
+}
+
+const retryFetch = () => {
+  const productId = getProductId()
   if (productId) {
     fetchProduct(productId)
   }
-  try {
-    loadFormOptions()
+}
+
+onMounted(async () => {
+  const productId = getProductId()
+  if (productId) {
+    await fetchProduct(productId)
   }
-  catch (err: unknown) {
-    const errMsg = loadFormError.value || String(err)
-    showErrorAlert(errMsg)
-  }
+
+  await loadFormOptions()
 })
 
 const handleDelete = async () => {
-  const productId = route.params.id as string
+  const productId = getProductId()
   if (!productId) return
 
   const result = await showConfirmDialog({
@@ -227,6 +261,13 @@ const handleDelete = async () => {
   }
   catch (err: unknown) {
     ShowCrudErrorAlert('produto', 'excluir', String(err))
+  }
+}
+
+const handleProductUpdated = () => {
+  const productId = getProductId()
+  if (productId) {
+    fetchProduct(productId)
   }
 }
 </script>

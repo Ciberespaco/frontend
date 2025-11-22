@@ -10,26 +10,26 @@ export type CreateSalePayload = {
 }
 
 export type ProductSale = {
-  product_id: string
+  product_id: number
   quant: number
   total: number
 }
 
 export type ProductSaleDetail = {
-  id: string
-  product_id: string
-  sale_id: string
+  id: number
+  product_id: number
+  sale_id: number
   quant: number
   total: number
 }
 
 export type SaleResponse = {
-  id: string
+  id: number
   date: string
   quant: number
   total: number
   status: boolean
-  user_id: string
+  user_id: number
   products_sales: ProductSaleDetail[]
 }
 
@@ -53,7 +53,7 @@ export const useSales = () => {
       total: pdvStore.total,
       payment_methods_ids: [pdvStore.selectedPaymentMethod!],
       products_sales: pdvStore.items.map(item => ({
-        product_id: item.productId,
+        product_id: item.productid,
         quant: item.quantidade,
         total: item.subtotal,
       })),
@@ -87,7 +87,7 @@ export const useSales = () => {
     }
   }
 
-  const fetchSale = async (id: string) => {
+  const fetchSale = async (id: number) => {
     loading.value = true
     error.value = null
     try {
@@ -103,7 +103,7 @@ export const useSales = () => {
     }
   }
 
-  const deleteSale = async (id: string) => {
+  const deleteSale = async (id: number) => {
     loading.value = true
     error.value = null
     try {

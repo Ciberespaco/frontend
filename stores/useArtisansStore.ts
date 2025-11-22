@@ -3,9 +3,11 @@ import axios from 'axios'
 import { formatError } from '~/lib/utils'
 
 interface Artisan {
-  id: string
+  id: number
   name: string
   cpf: string
+  exit_date: string | null
+  isActive: boolean
 }
 
 interface ArtisansState {
@@ -36,6 +38,8 @@ export const useArtisansStore = defineStore('artisans', {
           id: artisanFromApi.id,
           name: artisanFromApi.name,
           cpf: artisanFromApi.cpf,
+          exit_date: artisanFromApi.exit_date,
+          isActive: artisanFromApi.isActive,
         }))
 
         this.artisans = mappedData
