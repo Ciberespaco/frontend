@@ -29,9 +29,11 @@ const { value: password, errorMessage: passwordError }
 /* api  */
 const { login, error: apiError, loading } = useAuth()
 const router = useRouter()
-const onSubmit = form.handleSubmit((values) => {
-  login(values.email, values.password)
-  router.push('/')
+const onSubmit = form.handleSubmit(async (values) => {
+  const success = await login(values.email, values.password)
+  if (success) {
+    router.push('/')
+  }
 })
 </script>
 

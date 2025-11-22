@@ -14,10 +14,16 @@ const props = defineProps<ListboxGroupProps & {
 
 const delegatedProps = reactiveOmit(props, "class")
 
-const { allGroups, filterState } = useCommand()
+const { allGroups, filterState, shouldFilter } = useCommand()
 const id = useId()
 
-const isRender = computed(() => !filterState.search ? true : filterState.filtered.groups.has(id))
+const isRender = computed(() => {
+  if (shouldFilter.value === false) {
+    return true
+  }
+
+  return !filterState.search ? true : filterState.filtered.groups.has(id)
+})
 
 provideCommandGroupContext({ id })
 onMounted(() => {

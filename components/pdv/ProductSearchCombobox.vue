@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
+import { ref, watch, onUnmounted } from 'vue'
 import { Check, ChevronsUpDown } from 'lucide-vue-next'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import type { FieldProps } from '@/components/ui/auto-form/interface'
@@ -9,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useProductSearch, type ProductSearched } from '~/composables/useProductSearch'
+import AutoFormLabel from '@/components/ui/auto-form/AutoFormLabel.vue'
 
 defineProps<FieldProps>()
 
@@ -18,11 +18,24 @@ const searchTrigger = ref('')
 
 const { data: products, pending } = useProductSearch(searchTrigger)
 
-const debouncedSearch = useDebounceFn((value: string) => {
-  searchTrigger.value = value
-}, 500)
+let timeout: NodeJS.Timeout | null = null
 
-watch(searchTerm, debouncedSearch)
+onUnmounted(() => {
+  if (timeout) clearTimeout(timeout)
+})
+
+watch(searchTerm, (newValue) => {
+  if (timeout) clearTimeout(timeout)
+
+  if (newValue === '') {
+    searchTrigger.value = ''
+    return
+  }
+
+  timeout = setTimeout(() => {
+    searchTrigger.value = newValue
+  }, 500)
+})
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function handleSelect(componentField: any, product: ProductSearched) {
@@ -52,7 +65,7 @@ function handleSelect(componentField: any, product: ProductSearched) {
               role="combobox"
               :class="cn(
                 'w-full justify-between',
-                !value && 'text-muted-foreground', // ✨ CORREÇÃO 3: Use 'value' aqui
+                !value && 'text-muted-foreground',
               )"
             >
               {{ value ? value.name : "Selecione um produto..." }}
