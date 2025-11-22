@@ -4,7 +4,7 @@ import { useArtisanTechniquesStore } from '~/stores/useArtisanTechniquesStore'
 import { storeToRefs } from 'pinia'
 
 export type ArtisanTechnique = {
-  id: string
+  id: number
   name: string
 }
 
@@ -17,10 +17,6 @@ export const useArtisanTechniques = () => {
   const fetchError = ref<string | null>(null)
 
   const fetchArtisanTechniques = async () => {
-    if (artisanTechniques.value) {
-      return
-    }
-
     loading.value = true
     fetchError.value = null
     try {
@@ -53,7 +49,24 @@ export const useArtisanTechniques = () => {
     }
   }
 
-  const deleteArtisanTechnique = async (id: string) => {
+  const updateArtisanTechnique = async (id: number, data: Omit<ArtisanTechnique, 'id'>) => {
+    loading.value = true
+    error.value = null
+    try {
+      await axios.patch(`/artisan-techniques/${id}`, data)
+      artisanTechniquesStore.clearArtisanTechniques()
+      await fetchArtisanTechniques()
+    }
+    catch (err: unknown) {
+      error.value = formatError(err)
+      throw err
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  const deleteArtisanTechnique = async (id: number) => {
     loading.value = true
     error.value = null
     try {
@@ -77,6 +90,7 @@ export const useArtisanTechniques = () => {
     artisanTechniques,
     createArtisanTechnique,
     fetchArtisanTechniques,
+    updateArtisanTechnique,
     deleteArtisanTechnique,
   }
 }

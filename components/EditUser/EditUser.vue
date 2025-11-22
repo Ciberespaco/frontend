@@ -37,6 +37,7 @@
     v-if="isEditing && user"
     :user="user"
     @cancel="isEditing = false"
+    @updated="isEditing = false"
   />
   <div
     v-if="isEditing && user?.id"
@@ -57,7 +58,7 @@ import { useDeleteUser } from '#imports'
 
 const { user, logout } = useAuth()
 const isEditing = ref(false)
-const { deleteUser } = useDeleteUser()
+const { deleteUser, apiError } = useDeleteUser()
 
 const handleLogout = () => {
   logout()
@@ -74,9 +75,15 @@ const handleDelete = () => {
       confirmButtonText: 'Sim, excluir!',
       cancelButtonText: 'Cancelar',
     })
-    .then((result) => {
+    .then(async (result) => {
       if (result.isConfirmed) {
-        deleteUser()
+        await deleteUser()
+        if (!apiError.value) {
+          swal.fire('Deletado!', 'Sua conta foi excluída.', 'success')
+          useRouter().push('/login')
+        } else {
+          swal.fire('Erro!', apiError.value, 'error')
+        }
       }
     })
 }

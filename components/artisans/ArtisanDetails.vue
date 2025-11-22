@@ -3,26 +3,41 @@
     <ArtisanEditModal
       v-if="artisan"
       :artisan="artisan"
-      @submit-success="handleEditSuccess"
+      @submit-success="handleArtisanUpdated"
     />
     <Button
-      variant="destructive"
+      v-if="artisan"
+      :variant="artisan.isActive ? 'destructive' : 'default'"
       size="sm"
       class="flex items-center gap-2"
-      @click="handleDelete"
+      :class="!artisan.isActive ? 'bg-green-600 hover:bg-green-700' : ''"
+      @click="handleStatusToggle"
     >
-      <Trash2 class="h-4 w-4" />
-      Excluir
+      <XCircle v-if="artisan.isActive" class="h-4 w-4" />
+      <CheckCircle v-else class="h-4 w-4" />
+      {{ artisan.isActive ? 'Desativar Artesão' : 'Ativar Artesão' }}
     </Button>
   </div>
+
   <div
     v-if="loading"
     class="flex items-center justify-center py-12"
   >
-    <div class="flex items-center gap-3">
-      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-      <span class="text-gray-600">Carregando...</span>
+    <div class="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-4">
+      <AlertCircle class="h-12 w-12 text-red-500" />
     </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">
+      Ocorreu um erro ao carregar o artesão
+    </h3>
+    <p class="text-red-600 mb-4 text-center max-w-md">
+      {{ error }}
+    </p>
+    <Button
+      variant="outline"
+      @click="retryFetch"
+    >
+      Tentar Novamente
+    </Button>
   </div>
 
   <div
@@ -40,16 +55,11 @@
       <InfoItem
         label="CPF"
         :value="formatCpf(artisan.cpf)"
-        mono
       />
       <InfoItem
         label="Sexo"
-        variant="badge"
-      >
-        <Badge :variant="artisan.sex === 'M' ? 'default' : 'secondary'">
-          {{ artisan.sex === "M" ? "Masculino" : "Feminino" }}
-        </Badge>
-      </InfoItem>
+        :value="artisan.sex === 'F' ? 'Feminino' : 'Masculino'"
+      />
       <InfoItem
         label="Data de Nascimento"
         :value="formatDate(artisan.birthdate)"
@@ -57,35 +67,8 @@
     </InfoCard>
 
     <InfoCard
-      title="Endereço"
-      :icon="MapPin"
-    >
-      <InfoItem
-        label="CEP"
-        :value="formatCEP(artisan.cep)"
-        mono
-      />
-      <InfoItem
-        label="Número"
-        :value="artisan.house_number"
-      />
-      <InfoItem
-        label="Bairro"
-        :value="artisan.bairro"
-      />
-      <InfoItem
-        label="Cidade"
-        :value="artisan.localidade"
-      />
-      <InfoItem
-        label="Estado"
-        :value="`${artisan.estado} (${artisan.uf})`"
-      />
-    </InfoCard>
-
-    <InfoCard
-      title="Informações do Registro"
-      :icon="FileText"
+      title="Dados Profissionais"
+      :icon="Briefcase"
     >
       <InfoItem
         label="Selo Municipal"
@@ -97,44 +80,48 @@
         :value="formatDate(artisan.artisan_register_date)"
       />
       <InfoItem
-        label="Data de Criação"
-        :value="formatDateTime(artisan.created_at)"
+        label="Status"
+        variant="badge"
+      >
+        <Badge variant="default">
+          Ativo
+        </Badge>
+      </InfoItem>
+    </InfoCard>
+
+    <InfoCard
+      title="Endereço"
+      :icon="MapPin"
+    >
+      <InfoItem
+        label="CEP"
+        :value="artisan.cep"
+        mono
       />
       <InfoItem
-        v-if="artisan.exit_date"
-        label="Data de Saída"
-        :value="formatDate(artisan.exit_date)"
+        label="Logradouro"
+        :value="`${artisan.logradouro}, ${artisan.house_number}`"
+      />
+      <InfoItem
+        label="Bairro"
+        :value="artisan.bairro"
+      />
+      <InfoItem
+        label="Cidade/UF"
+        :value="`${artisan.localidade} - ${artisan.uf}`"
       />
     </InfoCard>
 
-    <Card v-if="artisan.obs">
-      <CardHeader>
-        <CardTitle class="flex items-center gap-2">
-          <MessageSquare class="h-5 w-5" />
-          Observações
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p class="text-gray-900 leading-relaxed">
-          {{ artisan.obs }}
-        </p>
-      </CardContent>
-    </Card>
-  </div>
-
-  <div
-    v-else
-    class="text-center py-12"
-  >
-    <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-      <AlertCircle class="h-12 w-12 text-gray-400" />
-    </div>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">
-      Nenhum registro encontrado
-    </h3>
-    <p class="text-gray-600">
-      {{ emptyMessage || "Não foi possível encontrar os dados solicitados." }}
-    </p>
+    <InfoCard
+      v-if="artisan.obs"
+      title="Observações"
+      :icon="FileText"
+      class="mb-8"
+    >
+      <p class="text-gray-700 leading-relaxed">
+        {{ artisan.obs }}
+      </p>
+    </InfoCard>
   </div>
 </template>
 
@@ -142,96 +129,100 @@
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 import { useArtisans } from '@/composables/useArtisans'
-import Swal from 'sweetalert2'
 import { Button } from '@/components/ui/button'
 import {
   Trash2,
+  XCircle,
+  CheckCircle,
   User,
   MapPin,
+  Briefcase,
   FileText,
-  MessageSquare,
   AlertCircle,
 } from 'lucide-vue-next'
-import { formatCEP, formatCpf, formatDate, formatDateTime } from '~/lib/utils'
+import { formatCpf, formatDate } from '~/lib/utils'
 import InfoCard from '../InfoCard/InfoCard.vue'
 import InfoItem from '../InfoCard/InfoItem.vue'
+import { Badge } from '@/components/ui/badge'
+import { showConfirmDialog, ShowCrudErrorAlert, showSuccessToast } from '~/lib/swal'
 import ArtisanEditModal from './ArtisanEditModal.vue'
-
-defineEmits(['edit', 'delete'])
-
-defineProps<{
-  title?: string
-  subtitle?: string
-  emptyMessage?: string
-}>()
 
 const route = useRoute()
 const router = useRouter()
+const { artisan, loading, error, fetchArtisan, deleteArtisan, activateArtisan } = useArtisans()
 
-const { deleteArtisan, fetchArtisan, artisan, loading, error } = useArtisans()
-
-const handleEditSuccess = () => {
-  const artisanId = route.params.id as string
-  if (artisanId) {
+const retryFetch = () => {
+  const artisanId = Number(route.params.id)
+  if (!isNaN(artisanId)) {
     fetchArtisan(artisanId)
-    Swal.fire('Sucesso!', 'Os dados foram atualizados.', 'success')
-  }
-}
-
-const handleDelete = async () => {
-  if (!artisan.value?.id) return
-
-  const result = await Swal.fire({
-    title: 'Você tem certeza?',
-    text: 'Esta ação não pode ser desfeita!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#6c757d',
-    confirmButtonText: 'Sim, pode deletar!',
-    cancelButtonText: 'Cancelar',
-  })
-
-  if (!result.isConfirmed) {
-    return
-  }
-
-  try {
-    await deleteArtisan(artisan.value.id)
-    await Swal.fire(
-      'Deletado!',
-      'O artesão foi removido com sucesso.',
-      'success',
-    )
-
-    router.push('/artisans')
-  }
-  catch (err: unknown) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Erro ao deletar',
-      text: error.value || String(err) || 'Ocorreu um erro inesperado.',
-    })
   }
 }
 
 onMounted(() => {
-  const artisanId = route.params.id
-  if (!artisanId) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Erro',
-      text: 'ID do artesão não fornecido.',
-    })
-    return
-  }
-  fetchArtisan(artisanId as string)
-  if (error.value) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Erro',
-      text: error.value,
-    })
+  const artisanId = Number(route.params.id)
+  if (!isNaN(artisanId)) {
+    fetchArtisan(artisanId)
   }
 })
+
+const handleDelete = async () => {
+  const artisanId = Number(route.params.id)
+  if (isNaN(artisanId)) return
+
+  const result = await showConfirmDialog({
+    title: 'Você tem certeza?',
+    text: 'Você não poderá reverter esta ação!',
+    confirmButtonText: 'Sim, excluir!',
+  })
+
+  if (!result) return
+
+  try {
+    await deleteArtisan(artisanId)
+    showSuccessToast('Artesão excluído com sucesso!')
+    router.push('/artisans')
+  }
+  catch (err: unknown) {
+    ShowCrudErrorAlert('artesão', 'excluir', String(err))
+  }
+}
+
+const getArtisanId = () => Number(route.params.id)
+
+const handleArtisanUpdated = () => {
+  const artisanId = getArtisanId()
+  if (!isNaN(artisanId)) {
+    fetchArtisan(artisanId)
+  }
+}
+
+const handleStatusToggle = async () => {
+  if (!artisan.value) return
+  
+  const isActive = artisan.value.isActive
+  const action = isActive ? 'desativar' : 'ativar'
+  
+  const result = await showConfirmDialog({
+    title: `${isActive ? 'Desativar' : 'Ativar'} Artesão?`,
+    text: `O artesão será ${isActive ? 'desativado' : 'ativado'}.`,
+    confirmButtonText: `Sim, ${action}!`,
+    confirmButtonColor: isActive ? '#d33' : '#16a34a',
+  })
+
+  if (!result) return
+
+  try {
+    if (isActive) {
+      await deleteArtisan(artisan.value.id)
+      showSuccessToast('Artesão desativado com sucesso!')
+    } else {
+      await activateArtisan(artisan.value.id)
+      showSuccessToast('Artesão ativado com sucesso!')
+    }
+    // Refresh artisan data
+    fetchArtisan(artisan.value.id)
+  } catch (err: unknown) {
+    ShowCrudErrorAlert('artesão', action, String(err))
+  }
+}
 </script>

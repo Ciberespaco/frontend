@@ -2,15 +2,17 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import { formatError } from '~/lib/utils'
 import type { ArtisanSchema } from '~/lib/schemas/artisan.schema'
+import { useArtisansStore } from '~/stores/useArtisansStore'
 
 export type Artisan = {
-  id: string
+  id: number
   name: string
   cpf: string
   municipal_seal: string
   sex: 'M' | 'F'
   birthdate: string
   cep: string
+  logradouro: string
   house_number: string
   bairro: string
   localidade: string
@@ -20,6 +22,7 @@ export type Artisan = {
   created_at: string
   exit_date: string | null
   obs: string
+  isActive: boolean
 }
 
 export interface ArtisanListResponse {
@@ -40,14 +43,22 @@ export function useArtisans() {
   const totalPages = ref(0)
   const artisan = ref<Artisan | null>(null)
 
-  const fetchArtisans = async (page: number = 1, limit: number = 10) => {
+  const artisansStore = useArtisansStore()
+
+  const fetchArtisans = async (page: number = 1, limit: number = 10, isActive?: boolean) => {
     loading.value = true
     error.value = null
     try {
-      const { data } = await axios.get<ArtisanListResponse>(
-        `/artisan/list?page=${page}&limit=${limit}`,
-      )
-      artisans.value = data.data
+      let url = `/artisan/list?page=${page}&limit=${limit}`
+      if (isActive !== undefined) {
+        url += `&isActive=${isActive}`
+      }
+      const { data } = await axios.get<ArtisanListResponse>(url)
+      // Ensure isActive is calculated for each artisan based on exit_date
+      artisans.value = data.data.map(artisan => ({
+        ...artisan,
+        isActive: artisan.exit_date === null
+      }))
       totalItems.value = data.totalItems
       currentPage.value = data.currentPage
       itemsPerPage.value = data.itemsPerPage
@@ -62,12 +73,16 @@ export function useArtisans() {
     }
   }
 
-  const fetchArtisan = async (id: string) => {
+  const fetchArtisan = async (id: number | string) => {
     loading.value = true
     error.value = null
     try {
       const { data } = await axios.get<Artisan>(`/artisan/${id}`)
-      artisan.value = data
+      // Ensure isActive is set based on exit_date
+      artisan.value = {
+        ...data,
+        isActive: data.exit_date === null
+      }
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -84,6 +99,7 @@ export function useArtisans() {
     try {
       const { data: newArtisan } = await axios.post<Artisan>('/artisan', data)
       artisans.value.push(newArtisan)
+      await artisansStore.refresh()
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -94,7 +110,7 @@ export function useArtisans() {
     }
   }
 
-  const editArtisan = async (id: string, data: ArtisanSchema) => {
+  const editArtisan = async (id: number, data: Partial<ArtisanSchema> & { isActive?: boolean }) => {
     loading.value = true
     error.value = null
     try {
@@ -105,6 +121,7 @@ export function useArtisans() {
       artisans.value = artisans.value.map(artisan =>
         artisan.id === id ? updatedArtisan : artisan,
       )
+      await artisansStore.refresh()
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -115,11 +132,32 @@ export function useArtisans() {
     }
   }
 
-  const deleteArtisan = async (id: string) => {
+  const deleteArtisan = async (id: number) => {
     loading.value = true
     error.value = null
     try {
       await axios.delete(`/artisan/${id}`)
+      // Refresh list to update status - fetch all artisans (active and inactive)
+      await fetchArtisans(currentPage.value, itemsPerPage.value, undefined)
+      await artisansStore.refresh()
+    }
+    catch (err: unknown) {
+      error.value = formatError(err)
+      throw err
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  const activateArtisan = async (id: number) => {
+    loading.value = true
+    error.value = null
+    try {
+      await editArtisan(id, { isActive: true })
+      // Refresh list to update status - fetch all artisans (active and inactive)
+      await fetchArtisans(currentPage.value, itemsPerPage.value, undefined)
+      await artisansStore.refresh()
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -144,5 +182,6 @@ export function useArtisans() {
     fetchArtisans,
     fetchArtisan,
     deleteArtisan,
+    activateArtisan,
   }
 }

@@ -9,6 +9,10 @@ export const showSuccessToast = (title: string) => {
     showConfirmButton: false,
     timer: 3000,
     timerProgressBar: true,
+    customClass: {
+      container: '!pointer-events-none',
+      popup: '!pointer-events-auto',
+    },
   })
 }
 
@@ -25,15 +29,16 @@ export const showConfirmDialog = async (options: {
   title: string
   text: string
   confirmButtonText?: string
+  confirmButtonColor?: string
 }): Promise<boolean> => {
-  const { title, text, confirmButtonText = 'Sim, excluir!' } = options
+  const { title, text, confirmButtonText = 'Sim, excluir!', confirmButtonColor = '#d33' } = options
 
   const result = await Swal.fire({
     title,
     text,
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#d33',
+    confirmButtonColor,
     cancelButtonColor: '#6c757d',
     confirmButtonText,
     cancelButtonText: 'Cancelar',

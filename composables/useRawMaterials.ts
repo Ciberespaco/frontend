@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { formatError } from '~/lib/utils'
 import { useRawMaterialsStore } from '~/stores/useRawMaterialsStore'
+import { storeToRefs } from 'pinia'
 
 export type RawMaterial = {
-  id: string
+  id: number
   name: string
 }
 
@@ -16,10 +17,6 @@ export const useRawMaterials = () => {
   const fetchError = ref<string | null>(null)
 
   const fetchRawMaterials = async () => {
-    if (rawMaterials.value) {
-      return
-    }
-
     loading.value = true
     fetchError.value = null
     try {
@@ -52,7 +49,24 @@ export const useRawMaterials = () => {
     }
   }
 
-  const deleteRawMaterial = async (id: string) => {
+  const updateRawMaterial = async (id: number, data: Omit<RawMaterial, 'id'>) => {
+    loading.value = true
+    error.value = null
+    try {
+      await axios.patch(`/raw-materials/${id}`, data)
+      rawMaterialsStore.clearRawMaterials()
+      await fetchRawMaterials()
+    }
+    catch (err: unknown) {
+      error.value = formatError(err)
+      throw err
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  const deleteRawMaterial = async (id: number) => {
     loading.value = true
     error.value = null
     try {
@@ -76,6 +90,7 @@ export const useRawMaterials = () => {
     rawMaterials,
     createRawMaterial,
     fetchRawMaterials,
+    updateRawMaterial,
     deleteRawMaterial,
   }
 }

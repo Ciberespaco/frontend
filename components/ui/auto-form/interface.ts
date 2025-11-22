@@ -57,6 +57,8 @@ export type Config<SchemaType extends object> = {
       : ConfigItem;
 }
 
+export type FieldConfig<SchemaType extends object> = Config<SchemaType>
+
 export enum DependencyType {
   DISABLES,
   REQUIRES,

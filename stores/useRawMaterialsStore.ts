@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 interface RawMaterial {
-  id: string
+  id: number
   name: string
 }
 

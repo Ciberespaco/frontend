@@ -17,7 +17,7 @@ import Button from '@/components/ui/button/Button.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
 
 const props = defineProps<{
-  userId: string | number
+  userId: number | number
 }>()
 
 const emit = defineEmits<{

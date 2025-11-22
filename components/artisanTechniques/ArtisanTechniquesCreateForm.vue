@@ -16,27 +16,19 @@ import { type ArtisanTechniqueSchema, artisanTechniqueSchema, fieldConfig } from
 import AutoForm from '../ui/auto-form/AutoForm.vue'
 import Button from '../ui/button/Button.vue'
 import { useArtisanTechniques } from '~/composables/useArtisanTechniques'
-import Swal from 'sweetalert2'
+import { showSuccessToast, ShowCrudErrorAlert } from '~/lib/swal'
 
-const { createArtisanTechnique, error } = useArtisanTechniques()
+const { createArtisanTechnique } = useArtisanTechniques()
 
 const emit = defineEmits(['submit-success'])
 const onSubmit = async (values: ArtisanTechniqueSchema) => {
   try {
     await createArtisanTechnique(values)
-    Swal.fire({
-      icon: 'success',
-      title: 'Criado!',
-      text: 'O técnica foi criada com sucesso.',
-    })
+    showSuccessToast('Técnica artesanal criada com sucesso!')
     emit('submit-success')
   }
   catch (err: unknown) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Erro ao criar',
-      text: error.value || String(err) || 'Ocorreu um erro inesperado.',
-    })
+    ShowCrudErrorAlert('técnica artesanal', 'criar', String(err))
   }
 }
 </script>

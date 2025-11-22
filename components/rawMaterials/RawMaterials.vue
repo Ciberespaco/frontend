@@ -1,15 +1,19 @@
 <template>
-  <RawMaterialsCreateModal @submit-success="onRawMaterialCreated" />
-  <RawMaterialsList ref="rawMaterialsListComponent" />
+  <div class="space-y-4">
+    <RawMaterialsCreateModal @submit-success="handleUpdate" />
+
+    <RawMaterialsList :key="refreshKey" />
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import RawMaterialsList from './RawMaterialsList.vue'
 import RawMaterialsCreateModal from './RawMaterialsCreateModal.vue'
 
-const rawMaterialsListComponent = ref()
+const refreshKey = ref(0)
 
-const onRawMaterialCreated = () => {
-  rawMaterialsListComponent.value?.refresh()
+const handleUpdate = () => {
+  refreshKey.value++
 }
 </script>

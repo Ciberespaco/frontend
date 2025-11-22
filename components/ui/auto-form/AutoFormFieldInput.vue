@@ -12,7 +12,7 @@ const inputComponent = computed(() => props.config?.component === 'textarea' ? T
 </script>
 
 <template>
-  <FormField v-slot="slotProps" :name="fieldName">
+  <FormField v-slot="slotProps" :name="fieldName" :validate-on-blur="false">
     <FormItem v-bind="$attrs">
       <AutoFormLabel v-if="!config?.hideLabel" :required="required">
         {{ config?.label || beautifyObjectName(label ?? fieldName) }}

@@ -1,17 +1,19 @@
 <template>
-  <ArtisanTechniquesCreateModal @submit-success="onArtisanTechniqueCreated" />
-  <ArtisanTechniquesList ref="artisanTechniquesListComponent" />
+  <div class="space-y-4">
+    <ArtisanTechniquesCreateModal @submit-success="handleUpdate" />
+
+    <ArtisanTechniquesList :key="refreshKey" />
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import ArtisanTechniquesCreateModal from './ArtisanTechniquesCreateModal.vue'
 import ArtisanTechniquesList from './ArtisanTechniquesList.vue'
 
-const artisanTechniquesListComponent = ref()
+const refreshKey = ref(0)
 
-const onArtisanTechniqueCreated = () => {
-  if (artisanTechniquesListComponent.value?.refresh) {
-    artisanTechniquesListComponent.value.refresh()
-  }
+const handleUpdate = () => {
+  refreshKey.value++
 }
 </script>

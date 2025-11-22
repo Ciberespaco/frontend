@@ -5,7 +5,7 @@ import type { SaleItemSchema } from '~/lib/schemas/create-sale.schema'
 
 export interface SaleItem {
   id: string
-  productId: string
+  productid: number
   codigo: number
   produto: string
   quantidade: number
@@ -45,7 +45,7 @@ export const usePdvStore = defineStore('pdv', () => {
 
     const newItem: SaleItem = {
       id: crypto.randomUUID(),
-      productId: product.id,
+      productid: Number(product.id),
       codigo: product.product_code || 0,
       produto: product.name,
       quantidade: quantity,
@@ -62,12 +62,20 @@ export const usePdvStore = defineStore('pdv', () => {
     selectedPaymentMethod.value = null
   }
 
+  function removeItem(itemId: string) {
+    const index = items.value.findIndex(item => item.id === itemId)
+    if (index !== -1) {
+      items.value.splice(index, 1)
+    }
+  }
+
   return {
     items,
     total,
     selectedPaymentMethod,
     canFinalizeSale,
     addItem,
+    removeItem,
     clearSale,
     totalDiscount,
     totalBeforeDiscount,

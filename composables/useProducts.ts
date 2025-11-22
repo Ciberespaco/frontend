@@ -1,11 +1,12 @@
 import axios from 'axios'
 import type { ProductSchema } from '~/lib/schemas/product.schema'
 import { formatError } from '~/lib/utils'
+import { useProductsStore } from '~/stores/useProductsStore'
 
 export type Product = {
-  id: string
+  id: number
   artisan: {
-    id: string
+    id: number
     name: string
     cpf: string
     municipal_seal: string
@@ -15,20 +16,21 @@ export type Product = {
   name: string
   price: number
   quant: number
+  description?: string | null
   obs?: string | null
   status: string
   created_at: string
   updated_at: string
   raw_material: {
-    id: string
+    id: number
     name: string
   }
   artisanal_technique: {
-    id: string
+    id: number
     name: string
   }
   product_category: {
-    id: string
+    id: number
     name: string
   }
 }
@@ -50,14 +52,17 @@ export function useProducts() {
   const itemsPerPage = ref(10)
   const totalPages = ref(0)
   const product = ref<Product | null>(null)
+  const productsStore = useProductsStore()
 
-  const fetchProducts = async (page: number = 1, limit: number = 10) => {
+  const fetchProducts = async (page: number = 1, limit: number = 10, status?: string) => {
     loading.value = true
     error.value = null
     try {
-      const { data } = await axios.get<ProductListResponse>(
-        `/products?page=${page}&limit=${limit}`,
-      )
+      let url = `/products?page=${page}&limit=${limit}`
+      if (status) {
+        url += `&status=${status}`
+      }
+      const { data } = await axios.get<ProductListResponse>(url)
       products.value = data.data
       totalItems.value = data.totalItems
       currentPage.value = data.currentPage
@@ -73,7 +78,7 @@ export function useProducts() {
     }
   }
 
-  const fetchProduct = async (id: string) => {
+  const fetchProduct = async (id: number) => {
     loading.value = true
     error.value = null
     try {
@@ -89,11 +94,30 @@ export function useProducts() {
     }
   }
 
-  const deleteProduct = async (id: string) => {
+  const deleteProduct = async (id: number) => {
     loading.value = true
     error.value = null
     try {
       await axios.delete<Product>(`/products/${id}`)
+      await productsStore.refresh()
+      await fetchProducts(currentPage.value, itemsPerPage.value)
+    }
+    catch (err: unknown) {
+      error.value = formatError(err)
+      throw formatError(err)
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  const activateProduct = async (id: number) => {
+    loading.value = true
+    error.value = null
+    try {
+      await axios.patch<Product>(`/products/${id}`, { status: 'ACTIVE' })
+      await productsStore.refresh()
+      await fetchProducts(currentPage.value, itemsPerPage.value)
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -109,10 +133,11 @@ export function useProducts() {
     error.value = null
     try {
       await axios.post<ProductSchema>('/products', data)
+      await productsStore.refresh()
     }
     catch (err: unknown) {
       error.value = formatError(err)
-      throw formatError(err)
+      throw err
     }
     finally {
       loading.value = false
@@ -120,11 +145,12 @@ export function useProducts() {
     }
   }
 
-  const editProduct = async (data: ProductSchema, id: string) => {
+  const editProduct = async (data: ProductSchema, id: number) => {
     loading.value = true
     error.value = null
     try {
       await axios.patch<ProductSchema>(`/products/${id}`, data)
+      await productsStore.refresh()
     }
     catch (err: unknown) {
       error.value = formatError(err)
@@ -145,7 +171,7 @@ export function useProducts() {
     error.value = null
 
     try {
-      const { data } = await axios.get<ProductListResponse>(`/products?limit=${limit}&name=${name}`)
+      const { data } = await axios.get<ProductListResponse>(`/products?limit=${limit}&name=${name}&status=ACTIVE`)
       return data.data
     }
     catch (err: unknown) {
@@ -170,6 +196,7 @@ export function useProducts() {
     createProduct,
     editProduct,
     deleteProduct,
+    activateProduct,
     product,
     searchProductByName,
   }

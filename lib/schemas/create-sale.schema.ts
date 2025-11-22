@@ -1,12 +1,10 @@
-// ~/lib/schemas/create-sale.schema.ts
-
 import { z } from 'zod'
-import type { FieldConfig } from '~/components/ui/auto-form'
+import type { Config } from '~/components/ui/auto-form'
 import CurrencyInput from '~/components/basic/CurrencyInput.vue'
-import ProductSearchCombobox from '~/components/pdv/ProductSearchCombobox.vue'
+import ProductSearchInput from '~/components/pdv/ProductSearchInput.vue'
 
 const ProductObjectSchema = z.object({
-  id: z.string().uuid(),
+  id: z.union([z.string(), z.number()]),
   name: z.string(),
   product_code: z.number(),
   quant: z.number(),
@@ -26,21 +24,31 @@ export const SaleItemSchema = z.object({
     .default(0),
 })
 
-export const saleItemFieldConfig = {
-  product: {
-    label: 'Produto',
-    component: ProductSearchCombobox,
-    description: 'Digite para buscar e selecionar um produto.',
-  },
-  quantity: {
-    label: 'Quantidade',
-    inputProps: {
-      type: 'number',
-      min: 1,
+export type SaleItemSchemaType = z.infer<typeof SaleItemSchema>
+
+export function createSaleItemFieldConfig(initialSearch?: string): Config<SaleItemSchemaType> {
+  return {
+    product: {
+      label: 'Produto',
+      component: ProductSearchInput,
+      description: 'Digite para buscar e selecionar um produto.',
+      componentProps: {
+        initialSearch,
+      },
     },
-  },
-  discount: {
-    label: 'Desconto (R$)',
-    component: CurrencyInput,
-  },
-} satisfies FieldConfig<typeof SaleItemSchema>
+    quantity: {
+      label: 'Quantidade',
+      inputProps: {
+        type: 'number',
+        min: 1,
+      },
+    },
+    discount: {
+      label: 'Desconto (R$)',
+      component: CurrencyInput,
+    },
+  } satisfies Config<SaleItemSchemaType> as unknown
+}
+
+// Default export for backward compatibility
+export const saleItemFieldConfig = createSaleItemFieldConfig()

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 interface ArtisanTechnique {
-  id: string
+  id: number
   name: string
 }
 

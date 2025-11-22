@@ -72,6 +72,7 @@ const formComponentProps = computed(() => {
     return {
       keepValues: true,
       validationSchema: formSchema,
+      validateOnBlur: false,
       onSubmit: (val: GenericObject) => emits('submit', val),
     }
   }

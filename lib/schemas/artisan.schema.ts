@@ -1,72 +1,98 @@
 import { z } from 'zod'
 import { isValidCpf } from '../utils'
+import type { Config } from '~/components/ui/auto-form'
 import CpfInput from '~/components/basic/CpfInput.vue'
-import type { FieldConfig } from '~/components/ui/auto-form'
-import BrazilianStateSelect from '~/components/selects/BrazilianStateSelect.vue'
+import type { InputHTMLAttributes } from 'vue'
 
 export const artisanSchema = z.object({
-  name: z
-    .string({ required_error: 'O nome é obrigatório.' })
-    .min(3, 'O nome deve ter pelo menos 3 caracteres.'),
-  cpf: z
-    .string({ required_error: 'O CPF é obrigatório.' })
-    .transform(val => val.replace(/\D/g, ''))
-    .refine(isValidCpf, { message: 'CPF inválido.' }),
-  municipal_seal: z.string().min(1, 'O selo municipal é obrigatório.'),
-  sex: z.enum(['M', 'F'], { required_error: 'O sexo é obrigatório.' }),
+  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
 
-  birthdate: z.coerce.date({
-    required_error: 'A data de nascimento é obrigatória.',
+  cpf: z.string()
+    .transform(val => val.replace(/\D/g, ''))
+    .refine(val => val.length > 0, 'CPF é obrigatório')
+    .refine(isValidCpf, 'CPF inválido'),
+
+  municipal_seal: z.string().min(1, 'Selo municipal é obrigatório'),
+
+  sex: z.enum(['M', 'F'], {
+    required_error: 'Selecione o sexo',
   }),
-  cep: z.string().min(8, 'O CEP deve ter pelo menos 8 caracteres.'),
-  house_number: z.string().min(1, 'O número é obrigatório.'),
-  bairro: z.string().min(1, 'O bairro é obrigatório.'),
-  localidade: z.string().min(1, 'A localidade é obrigatória.'),
-  uf: z.string().length(2, 'A UF deve ter 2 caracteres.'),
-  artisan_register_date: z.coerce.date({
-    required_error: 'A data de registro é obrigatória.',
-  }),
-  exit_date: z.coerce.date().nullable().optional(),
-  obs: z
-    .string()
-    .optional()
-    .nullable()
-    .transform(val => val || null),
+
+  birthdate: z.string().refine(val => !isNaN(Date.parse(val)), 'Data inválida'),
+
+  cep: z.string().min(8, 'CEP inválido'),
+  logradouro: z.string().min(1, 'Logradouro é obrigatório'),
+  house_number: z.string().min(1, 'Número é obrigatório'),
+  bairro: z.string().min(1, 'Bairro é obrigatório'),
+  localidade: z.string().min(1, 'Cidade é obrigatória'),
+  uf: z.string().min(2, 'UF obrigatória'),
+  estado: z.string().min(1, 'Estado obrigatório'),
+
+  artisan_register_date: z.string().refine(val => !isNaN(Date.parse(val)), 'Data inválida'),
+  exit_date: z.string().optional().nullable(),
+  obs: z.string().optional().nullable(),
 })
 
 export type ArtisanSchema = z.infer<typeof artisanSchema>
 
-export const fieldConfig = {
-  sex: {
-    component: 'radio',
-    label: 'Sexo',
-    items: [
-      { value: 'M', label: 'Masculino' },
-      { value: 'F', label: 'Feminino' },
-    ],
+export const artisanFieldConfig: Config<ArtisanSchema> = {
+  municipal_seal: {
+    label: 'Selo Municipal',
   },
-  obs: {
-    component: 'textarea',
-    label: 'Observações',
-    componentProps: {
-      placeholder: 'Detalhes adicionais sobre o artesão...',
-    },
-  },
-  name: { label: 'Nome Completo' },
   cpf: {
     label: 'CPF',
     component: CpfInput,
   },
-  municipal_seal: { label: 'Selo Municipal' },
-  cep: { label: 'CEP' },
-  house_number: { label: 'Número' },
-  bairro: { label: 'Bairro' },
-  localidade: { label: 'Localidade (Cidade)' },
-  uf: { label: 'Estado', component: BrazilianStateSelect },
-  birthdate: { label: 'Data de Nascimento', component: 'date' },
-  artisan_register_date: {
-    label: 'Data de Registro do Artesão',
-    component: 'date',
+  sex: {
+    label: 'Sexo',
+    component: 'select',
+    inputProps: {
+      placeholder: 'Selecione...',
+      options: [
+        { label: 'Masculino', value: 'M' },
+        { label: 'Feminino', value: 'F' },
+      ],
+    } as unknown as InputHTMLAttributes & { options: { label: string, value: string }[] },
   },
-  exit_date: { label: 'Data de Saída (Opcional)', component: 'date' },
-} satisfies FieldConfig<typeof artisanSchema>
+  birthdate: {
+    label: 'Data de Nascimento',
+    inputProps: { type: 'date' },
+  },
+  artisan_register_date: {
+    label: 'Data de Registro',
+    inputProps: { type: 'date' },
+  },
+  exit_date: {
+    label: 'Data de Saída (Opcional)',
+    inputProps: { type: 'date' },
+  },
+  cep: {
+    label: 'CEP',
+    inputProps: { placeholder: 'Digite o CEP (somente números)' },
+  },
+  logradouro: {
+    label: 'Logradouro (Rua, Av, etc.)',
+  },
+  house_number: {
+    label: 'Número',
+  },
+  bairro: {
+    label: 'Bairro',
+  },
+  localidade: {
+    label: 'Cidade',
+    inputProps: { readonly: true },
+  },
+  uf: {
+    label: 'UF',
+    inputProps: { readonly: true, placeholder: 'SP' },
+  },
+  estado: {
+    label: 'Estado',
+    inputProps: { readonly: true, placeholder: 'São Paulo' },
+  },
+  obs: {
+    component: 'textarea',
+    label: 'Observações',
+  },
+}

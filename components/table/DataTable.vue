@@ -83,16 +83,17 @@ const table = useVueTable({
                     v-if="props.onView"
                     variant="default"
                     size="icon"
-                    class="h-8 w-8 rounded-full"
+                    class="h-8 w-8 rounded-full cursor-pointer"
                     @click="props.onView(row.original)"
                   >
                     <MoreVertical class="h-4 w-4" />
                   </Button>
+
                   <Button
                     v-if="props.onEdit"
                     variant="outline"
                     size="icon"
-                    class="h-8 w-8 rounded-full"
+                    class="h-8 w-8 rounded-full cursor-pointer"
                     @click="props.onEdit(row.original)"
                   >
                     <Edit class="h-4 w-4" />
@@ -101,7 +102,7 @@ const table = useVueTable({
                     v-if="props.onDelete"
                     variant="destructive"
                     size="icon"
-                    class="h-8 w-8 rounded-full"
+                    class="h-8 w-8 rounded-full cursor-pointer"
                     @click="props.onDelete(row.original)"
                   >
                     <Trash2 class="h-4 w-4" />

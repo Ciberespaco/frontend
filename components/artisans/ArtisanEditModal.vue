@@ -43,12 +43,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Pencil } from 'lucide-vue-next'
+import type { Artisan } from '@/composables/useArtisans'
 
 const props = defineProps<{
   artisan: Artisan
 }>()
 
 const emit = defineEmits(['submit-success'])
+
 const isOpen = ref(false)
 
 function handleFormSuccess() {

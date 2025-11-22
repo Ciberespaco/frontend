@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import axios from 'axios'
 
 export interface ProductSearched {
-  id: string
+  id: number
   name: string
   quant: number
   artisan: {
