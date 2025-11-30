@@ -1,11 +1,11 @@
+import { usePdvStore } from '#imports'
 import axios from 'axios'
 import { formatError } from '~/lib/utils'
-import { usePdvStore } from '#imports'
 
 export type CreateSalePayload = {
   quant: number
   total: number
-  payment_methods_ids: string[]
+  payment_methods_ids: number[]
   products_sales: ProductSale[]
 }
 
@@ -51,7 +51,7 @@ export const useSales = () => {
     const payload: CreateSalePayload = {
       quant: 1,
       total: pdvStore.total,
-      payment_methods_ids: [pdvStore.selectedPaymentMethod!],
+      payment_methods_ids: [Number(pdvStore.selectedPaymentMethod!)],
       products_sales: pdvStore.items.map(item => ({
         product_id: item.productid,
         quant: item.quantidade,

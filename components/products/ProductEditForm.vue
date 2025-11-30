@@ -4,12 +4,14 @@
     :schema="productSchema"
     :field-config="editFieldConfig"
     :form="form"
-    class="space-y-4"
+    class="space-y-4 pb-20"
     @submit="onUpdate"
   >
-    <Button type="submit">
-      Salvar Alterações
-    </Button>
+    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t flex justify-end gap-4 z-10 md:pl-64">
+      <Button type="submit">
+        Salvar Alterações
+      </Button>
+    </div>
   </AutoForm>
 </template>
 

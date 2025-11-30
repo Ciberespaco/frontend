@@ -1,12 +1,16 @@
 <template>
   <AutoForm
-    class="space-y-4"
+    :id="formId"
+    class="space-y-4 pb-20"
     :schema="artisanSchema"
     :field-config="artisanFieldConfig"
     :form="form"
     @submit="onSubmit"
   >
-    <div class="flex justify-end">
+    <div
+      v-if="!hideButton"
+      class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t flex justify-end gap-4 z-10 md:pl-64"
+    >
       <Button type="submit">
         {{ submitText || 'Salvar' }}
       </Button>
@@ -26,6 +30,8 @@ import { Button } from '~/components/ui/button'
 const props = defineProps<{
   initialValues?: Partial<ArtisanSchema>
   submitText?: string
+  formId?: string
+  hideButton?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -34,7 +40,10 @@ const emit = defineEmits<{
 
 const form = useForm<ArtisanSchema>({
   validationSchema: toTypedSchema(artisanSchema),
-  initialValues: props.initialValues || {},
+  initialValues: {
+    ...props.initialValues,
+    artisan_register_date: props.initialValues?.artisan_register_date || new Date().toISOString().split('T')[0],
+  },
 })
 
 watch(

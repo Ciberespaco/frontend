@@ -1,15 +1,21 @@
 <template>
   <AutoForm
     v-if="props.artisan"
+    :id="formId"
     :schema="artisanSchema"
     :field-config="artisanFieldConfig"
     :form="form"
-    class="space-y-4"
+    class="space-y-4 pb-20"
     @submit="onUpdate"
   >
-    <Button type="submit">
-      Salvar Alterações
-    </Button>
+    <div
+      v-if="!hideButton"
+      class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t flex justify-end gap-4 z-10 md:pl-64"
+    >
+      <Button type="submit">
+        Salvar Alterações
+      </Button>
+    </div>
   </AutoForm>
 </template>
 
@@ -30,6 +36,8 @@ import axios from 'axios'
 
 const props = defineProps<{
   artisan: Artisan
+  formId?: string
+  hideButton?: boolean
 }>()
 
 const form = useForm<ArtisanSchema>({

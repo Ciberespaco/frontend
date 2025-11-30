@@ -3,7 +3,7 @@ Este projeto é a interface de usuário (Frontend) do sistema de gestão desenvo
 
 - Gestão de Artesãos e Produtos: Cadastro detalhado de membros e seus respectivos produtos.
 
-- Ponto de Venda (PDV): Interface ágil para registro de vendas, com cálculo automático de comissões e taxas.
+- Balcão de Pedidos: Interface ágil para registro de pedidos, com cálculo automático de comissões e taxas.
 
 - Controle de Estoque: Atualização automática do inventário a cada venda.
 

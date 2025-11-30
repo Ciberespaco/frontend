@@ -46,11 +46,11 @@ onMounted(() => {
 const columns: ColumnDef<SaleResponse, unknown>[] = [
   {
     accessorKey: 'id',
-    header: 'ID da Venda',
+    header: 'ID do Pedido',
   },
   {
     accessorKey: 'date',
-    header: 'Data da Venda',
+    header: 'Data do Pedido',
     cell: ({ row }) => formatDateTime(row.getValue('date')),
   },
   {

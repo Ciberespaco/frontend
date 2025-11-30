@@ -1,5 +1,5 @@
 <template>
-  <Pdv />
+  <Pdv class="h-full" />
 </template>
 
 <script lang="ts" setup>

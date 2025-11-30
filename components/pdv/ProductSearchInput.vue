@@ -5,6 +5,7 @@ import type { FieldProps } from '@/components/ui/auto-form/interface'
 import { Input } from '@/components/ui/input'
 import { useProductSearch, type ProductSearched } from '~/composables/useProductSearch'
 import AutoFormLabel from '@/components/ui/auto-form/AutoFormLabel.vue'
+import { formatCurrency } from '~/lib/utils'
 
 const props = defineProps<FieldProps & { initialSearch?: string }>()
 
@@ -164,7 +165,12 @@ function handleKeyDown(event: KeyboardEvent, componentField: any) {
               ]"
               @click="handleSelect(componentField, product)"
             >
-              <div class="font-medium">{{ product.name }}</div>
+              <div class="flex justify-between items-center">
+                <div class="font-medium">{{ product.name }}</div>
+                <div class="text-sm font-semibold text-gray-700">
+                  {{ formatCurrency(product.price) }}
+                </div>
+              </div>
               <div class="text-xs text-gray-500">
                 Estoque: {{ product.quant }}
               </div>

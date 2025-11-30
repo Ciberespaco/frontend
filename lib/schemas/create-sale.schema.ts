@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import type { Config } from '~/components/ui/auto-form'
 import CurrencyInput from '~/components/basic/CurrencyInput.vue'
 import ProductSearchInput from '~/components/pdv/ProductSearchInput.vue'
+import type { Config } from '~/components/ui/auto-form'
 
 const ProductObjectSchema = z.object({
   id: z.union([z.string(), z.number()]),
@@ -18,7 +18,7 @@ export const SaleItemSchema = z.object({
   product: ProductObjectSchema.refine(val => val?.id, {
     message: 'Selecione um produto.',
   }),
-  quantity: z.coerce.number().min(1, 'A quantidade mínima é 1.'),
+  quantity: z.coerce.number().min(1, 'A quantidade mínima é 1.').default(1),
   discount: z.number()
     .min(0, 'O desconto não pode ser negativo.')
     .default(0),

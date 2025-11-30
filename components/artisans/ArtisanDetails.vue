@@ -80,6 +80,11 @@
         :value="formatDate(artisan.artisan_register_date)"
       />
       <InfoItem
+        v-if="artisan.exit_date"
+        label="Data de Saída"
+        :value="formatDate(artisan.exit_date)"
+      />
+      <InfoItem
         label="Status"
         variant="badge"
       >

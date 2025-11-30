@@ -3,7 +3,7 @@
     <DialogTrigger as-child>
       <Button>
         <Plus class="w-4 h-4 mr-2" />
-        Novo Método de Pagamento
+        Novo Método (F2)
       </Button>
     </DialogTrigger>
     <DialogContent>
@@ -18,10 +18,8 @@
   </Dialog>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { Plus } from 'lucide-vue-next'
-import Button from '../ui/button/Button.vue'
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import {
   Dialog,
   DialogContent,
@@ -29,15 +27,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog'
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-vue-next'
 import PaymentMethodsCreateForm from './PaymentMethodsCreateForm.vue'
 
+const open = ref(false)
 const emit = defineEmits(['submit-success'])
 
-const isOpen = ref(false)
+const setOpen = (value: boolean) => {
+  open.value = value
+}
 
-const handleSuccess = () => {
-  isOpen.value = false
+const onSuccess = () => {
+  setOpen(false)
   emit('submit-success')
 }
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'F2') {
+    event.preventDefault()
+    setOpen(true)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>
