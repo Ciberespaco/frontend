@@ -168,7 +168,7 @@ function handleKeyDown(event: KeyboardEvent, componentField: any) {
               <div class="flex justify-between items-center">
                 <div class="font-medium">{{ product.name }}</div>
                 <div class="text-sm font-semibold text-gray-700">
-                  {{ formatCurrency(product.price) }}
+                  {{ formatCurrency(product.price / 100) }}
                 </div>
               </div>
               <div class="text-xs text-gray-500">
