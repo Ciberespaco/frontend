@@ -1,8 +1,8 @@
-import { z } from 'zod'
-import { isValidCpf } from '../utils'
-import type { Config } from '~/components/ui/auto-form'
-import CpfInput from '~/components/basic/CpfInput.vue'
 import type { InputHTMLAttributes } from 'vue'
+import { z } from 'zod'
+import CpfInput from '~/components/basic/CpfInput.vue'
+import type { Config } from '~/components/ui/auto-form'
+import { isValidCpf } from '../utils'
 
 export const artisanSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -29,8 +29,14 @@ export const artisanSchema = z.object({
   estado: z.string().min(1, 'Estado obrigatório'),
 
   artisan_register_date: z.string().refine(val => !isNaN(Date.parse(val)), 'Data inválida'),
-  exit_date: z.string().optional().nullable(),
-  obs: z.string().optional().nullable(),
+  exit_date: z.string()
+    .optional()
+    .nullable()
+    .transform(val => val === '' || val === undefined ? null : val),
+  obs: z.string()
+    .optional()
+    .nullable()
+    .transform(val => val === '' || val === undefined ? null : val),
 })
 
 export type ArtisanSchema = z.infer<typeof artisanSchema>

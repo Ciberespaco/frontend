@@ -92,22 +92,21 @@
 </template>
 
 <script setup lang="ts">
-import { House, ShoppingCart, Package, Users, Archive, PenLine, CreditCard, CircleHelp } from 'lucide-vue-next'
 import {
-  SidebarProvider,
   Sidebar,
-  SidebarHeader,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
   SidebarSeparator,
   SidebarTrigger,
-  useSidebar,
 } from '@/components/ui/sidebar'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { Archive, CircleHelp, CreditCard, FileText, House, Package, PenLine, ShoppingCart, Users } from 'lucide-vue-next'
 import Title from '~/components/basic/Title.vue'
 import { useHeader } from '~/composables/useHeader'
 
@@ -118,6 +117,7 @@ const { title, description } = useHeader()
 const navItems = [
   { title: 'Home', route: '/', icon: House },
   { title: 'Pedidos', route: '/sales', icon: ShoppingCart },
+  { title: 'Relatórios', route: '/reports', icon: FileText },
   { title: 'Produtos', route: '/products', icon: Package },
   // { title: 'Usuários', route: '/usuarios', icon: Users }, // Comentado - rota não existe
   { title: 'Artesãos', route: '/artisans', icon: Users },

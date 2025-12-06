@@ -39,10 +39,12 @@ export const productSchema = z.object({
   description: z
     .string()
     .optional()
+    .transform(val => val === '' || val === undefined ? null : val)
     .default(''),
   obs: z
     .string()
     .optional()
+    .transform(val => val === '' || val === undefined ? null : val)
     .default(''),
 
   artisan_id: idSchema('A seleção do artesão é obrigatória.'),
