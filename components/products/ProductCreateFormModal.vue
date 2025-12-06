@@ -3,7 +3,7 @@
     <DialogTrigger as-child>
       <Button class="mb-4 cursor-pointer">
         <Plus class="w-4 h-4 mr-2" />
-        Cadastrar Novo Produto
+        Cadastrar Novo Produto (F2)
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[625px]">
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -50,6 +50,21 @@ const handleFormSuccess = () => {
 const reloadFormOptions = () => {
   formRef.value?.loadFormOptions()
 }
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'F2') {
+    event.preventDefault()
+    isOpen.value = true
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 
 defineExpose({
   reloadFormOptions,

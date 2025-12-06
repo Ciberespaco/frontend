@@ -1,30 +1,40 @@
 <template>
-  <Dialog v-model:open="isOpen">
+  <Dialog
+    :open="open"
+    @update:open="setOpen"
+  >
     <DialogTrigger as-child>
       <Button
         variant="outline"
-        size="sm"
-        class="flex items-center gap-2"
+        size="icon"
       >
-        <Pencil class="h-4 w-4" />
-        Editar Artesão
+        <Pencil class="w-4 h-4" />
       </Button>
     </DialogTrigger>
-    <DialogContent
-      v-if="isOpen"
-      class="sm:max-w-[625px]"
-    >
-      <DialogHeader>
+    <DialogContent class="max-w-3xl h-[90vh] flex flex-col p-0 gap-0">
+      <DialogHeader class="p-6 pb-4 flex-none">
         <DialogTitle>Editar Artesão</DialogTitle>
         <DialogDescription>
-          Altere os campos abaixo para atualizar os dados do artesão.
+          Faça as alterações necessárias nos dados do artesão.
         </DialogDescription>
       </DialogHeader>
-      <div class="grid gap-4 py-4 overflow-y-auto max-h-[70vh] pr-6">
+
+      <div class="flex-1 overflow-y-auto p-6 pt-0">
         <ArtisanEditForm
-          :artisan="props.artisan"
-          @submit-success="handleFormSuccess"
+          form-id="edit-artisan-form"
+          :hide-button="true"
+          :artisan="artisan"
+          @submit-success="onSuccess"
         />
+      </div>
+
+      <div class="p-4 border-t bg-white flex justify-end flex-none">
+        <Button
+          type="submit"
+          form="edit-artisan-form"
+        >
+          Salvar Alterações
+        </Button>
       </div>
     </DialogContent>
   </Dialog>

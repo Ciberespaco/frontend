@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import type { z } from 'zod'
 import type { SaleItemSchema } from '~/lib/schemas/create-sale.schema'
 
@@ -37,6 +37,39 @@ export const usePdvStore = defineStore('pdv', () => {
     return items.value.length > 0 && !!selectedPaymentMethod.value
   })
 
+  // Persistence
+  watch(
+    [items, selectedPaymentMethod],
+    () => {
+      localStorage.setItem('pdv_items', JSON.stringify(items.value))
+      if (selectedPaymentMethod.value) {
+        localStorage.setItem('pdv_payment_method', selectedPaymentMethod.value)
+      }
+      else {
+        localStorage.removeItem('pdv_payment_method')
+      }
+    },
+    { deep: true },
+  )
+
+  onMounted(() => {
+    const savedItems = localStorage.getItem('pdv_items')
+    const savedPaymentMethod = localStorage.getItem('pdv_payment_method')
+
+    if (savedItems) {
+      try {
+        items.value = JSON.parse(savedItems)
+      }
+      catch (e) {
+        console.error('Failed to parse saved PDV items', e)
+      }
+    }
+
+    if (savedPaymentMethod) {
+      selectedPaymentMethod.value = savedPaymentMethod
+    }
+  })
+
   function addItem(formData: FormData) {
     const { product, quantity, discount = 0 } = formData
     if (!product || !product.id) {
@@ -60,6 +93,8 @@ export const usePdvStore = defineStore('pdv', () => {
   function clearSale() {
     items.value = []
     selectedPaymentMethod.value = null
+    localStorage.removeItem('pdv_items')
+    localStorage.removeItem('pdv_payment_method')
   }
 
   function removeItem(itemId: string) {

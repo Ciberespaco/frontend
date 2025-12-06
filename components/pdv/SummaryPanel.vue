@@ -1,6 +1,5 @@
 <template>
-  <ProductTable :items="items" />
-  <Card class="mt-6">
+  <Card class="h-full">
     <CardHeader>
       <CardTitle class="text-center text-lg">
         Finalização
@@ -33,11 +32,11 @@
 <script setup lang="ts">
 import { usePdvStore } from '#imports'
 import { formatCurrency } from '~/lib/utils'
-import ProductTable from './ProductTable.vue'
 import Card from '../ui/card/Card.vue'
 import CardHeader from '../ui/card/CardHeader.vue'
 import SelectPaymentMethod from './SelectPaymentMethod.vue'
 
 const pdvStore = usePdvStore()
-const { items, total, totalDiscount, totalBeforeDiscount, selectedPaymentMethod } = storeToRefs(pdvStore)
+const { total, totalDiscount, totalBeforeDiscount, selectedPaymentMethod } = storeToRefs(pdvStore)
 </script>
+

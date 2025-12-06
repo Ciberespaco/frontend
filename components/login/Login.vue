@@ -6,6 +6,11 @@ import { useRouter } from '#app'
 import { useAuth } from '@/composables/useAuth'
 import AuthForm from '@/components/login/AuthForm.vue'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Eye, EyeOff } from 'lucide-vue-next'
+import { ref } from 'vue'
+
+const showPassword = ref(false)
 import {
   FormField,
   FormItem,
@@ -73,10 +78,31 @@ const onSubmit = form.handleSubmit(async (values) => {
           >Esqueci minha senha</a>
         </div>
         <FormControl>
-          <Input
-            v-model="password"
-            type="password"
-          />
+          <div class="relative">
+            <Input
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              class="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+              @click="showPassword = !showPassword"
+            >
+              <Eye
+                v-if="!showPassword"
+                class="h-4 w-4 text-muted-foreground"
+              />
+              <EyeOff
+                v-else
+                class="h-4 w-4 text-muted-foreground"
+              />
+              <span class="sr-only">
+                {{ showPassword ? 'Ocultar senha' : 'Mostrar senha' }}
+              </span>
+            </Button>
+          </div>
         </FormControl>
         <FormMessage>{{ passwordError }}</FormMessage>
       </FormItem>

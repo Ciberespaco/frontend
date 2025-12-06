@@ -1,8 +1,8 @@
 <template>
-  <div class="border rounded-lg">
+  <div>
     <Table>
-      <TableHeader>
-        <TableRow class="bg-gray-50">
+      <TableHeader class="sticky top-0 z-10 bg-white shadow-sm">
+        <TableRow class="bg-gray-50 hover:bg-gray-50">
           <TableHead>
             Código do Produto
           </TableHead>
@@ -31,7 +31,7 @@
       </TableHeader>
       <TableBody>
         <TableRow
-          v-for="item in items"
+          v-for="item in reversedItems"
           :key="item.id"
           class="hover:bg-gray-50"
         >
@@ -85,15 +85,20 @@ import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-vue-next'
 import { formatCurrency } from '~/lib/utils'
 import { usePdvStore } from '#imports'
+import { computed } from 'vue'
 
-defineProps({
+const pdvStore = usePdvStore()
+
+const props = defineProps({
   items: {
     type: Array,
     default: () => [],
   },
 })
 
-const pdvStore = usePdvStore()
+const reversedItems = computed(() => {
+  return [...props.items].reverse()
+})
 
 const removeItem = (itemId) => {
   pdvStore.removeItem(itemId)

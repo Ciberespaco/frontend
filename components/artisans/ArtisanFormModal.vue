@@ -6,27 +6,40 @@
     <DialogTrigger as-child>
       <Button class="cursor-pointer">
         <Plus class="w-4 h-4 mr-2" />
-        Novo Artesão
+        Novo Artesão (F2)
       </Button>
     </DialogTrigger>
-    <DialogContent class="max-w-3xl max-h-[90vh] overflow-y-auto">
-      <DialogHeader>
+    <DialogContent class="max-w-3xl h-[90vh] flex flex-col p-0 gap-0">
+      <DialogHeader class="p-6 pb-4 flex-none">
         <DialogTitle>Cadastrar Artesão</DialogTitle>
         <DialogDescription>
           Preencha os dados abaixo para cadastrar um novo artesão.
         </DialogDescription>
       </DialogHeader>
 
-      <ArtisanForm
-        submit-text="Cadastrar"
-        @submit="onSubmit"
-      />
+      <div class="flex-1 overflow-y-auto p-6 pt-0">
+        <ArtisanForm
+          form-id="create-artisan-form"
+          :hide-button="true"
+          submit-text="Cadastrar"
+          @submit="onSubmit"
+        />
+      </div>
+
+      <div class="p-4 border-t bg-white flex justify-end flex-none">
+        <Button
+          type="submit"
+          form="create-artisan-form"
+        >
+          Cadastrar
+        </Button>
+      </div>
     </DialogContent>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { Plus } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import {
@@ -61,4 +74,19 @@ const onSubmit = async (values: ArtisanSchema) => {
     ShowCrudErrorAlert('artesão', 'criar', String(err))
   }
 }
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'F2') {
+    event.preventDefault()
+    setOpen(true)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>

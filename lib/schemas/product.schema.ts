@@ -35,14 +35,16 @@ export const productSchema = z.object({
     .max(9999, {
       message: 'A quantidade deve ser menor ou igual a 9999.',
     })
-    .nonnegative('A quantidade não pode ser negativa.'),
+    .nonnegative('A quantidade não pode ser negativa.').default(1),
   description: z
     .string()
     .optional()
+    .transform(val => val === '' || val === undefined ? null : val)
     .default(''),
   obs: z
     .string()
     .optional()
+    .transform(val => val === '' || val === undefined ? null : val)
     .default(''),
 
   artisan_id: idSchema('A seleção do artesão é obrigatória.'),

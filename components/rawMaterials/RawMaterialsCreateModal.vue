@@ -6,7 +6,7 @@
     <DialogTrigger as-child>
       <Button>
         <Plus class="w-4 h-4 mr-2" />
-        Nova Matéria-prima
+        Nova Matéria-prima (F2)
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import {
   Dialog,
   DialogContent,
@@ -46,4 +46,19 @@ const onSuccess = () => {
   setOpen(false)
   emit('submit-success')
 }
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'F2') {
+    event.preventDefault()
+    setOpen(true)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>

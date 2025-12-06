@@ -1,11 +1,5 @@
 <template>
   <Dialog v-model:open="isOpen">
-    <DialogTrigger as-child>
-      <Button class="mb-4">
-        <Plus class="w-4 h-4 mr-2" />
-        Adicionar Produto
-      </Button>
-    </DialogTrigger>
     <DialogContent class="sm:max-w-[525px]">
       <DialogHeader>
         <DialogTitle>Adicionar Produto à Venda</DialogTitle>
