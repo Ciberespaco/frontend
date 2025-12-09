@@ -32,14 +32,14 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-vue-next'
 import PaymentMethodsCreateForm from './PaymentMethodsCreateForm.vue'
 
-const open = ref(false)
+const isOpen = ref(false)
 const emit = defineEmits(['submit-success'])
 
 const setOpen = (value: boolean) => {
-  open.value = value
+  isOpen.value = value
 }
 
-const onSuccess = () => {
+const handleSuccess = () => {
   setOpen(false)
   emit('submit-success')
 }
